@@ -1,3 +1,12 @@
+# lock files
+yarn.lock
+
+# Compiled output
+node_modules
+dist
+dist-ssr
+*.local
+
 # Logs
 logs
 *.log
@@ -7,18 +16,35 @@ yarn-error.log*
 pnpm-debug.log*
 lerna-debug.log*
 
-node_modules
-dist
-dist-ssr
-*.local
-
-# Editor directories and files
-.vscode/*
-!.vscode/extensions.json
-.idea
+# OS
 .DS_Store
+
+# Tests
+coverage
+.nyc_output
+
+# IDEs and editors
+.idea
+.classpath
+.c9
+.project
+.settings
+*.launch
 *.suo
 *.ntvs*
 *.njsproj
 *.sln
+*.sublime-workspace
 *.sw?
+
+# IDE - VSCode
+.vscode/*
+!.vscode/settings.json
+!.vscode/tasks.json
+!.vscode/launch.json
+!.vscode/extensions.json
+
+# Environment
+.env*
+!.env.example
+!.env.test
