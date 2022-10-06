@@ -9,12 +9,17 @@ export default ({ mode }) => {
   return defineConfig({
     plugins: [react()],
     server: {
-      port: Number(process.env.PORT || 8000),
+      host: process.env.VITE_HOST || '0.0.0.0',
+      port: Number(process.env.VITE_PORT) || 8000,
     },
     resolve: {
       alias: {
         '@': resolve(__dirname, './src'),
         '@tests': resolve(__dirname, './tests'),
+        '@mui/styled-engine': resolve(
+          __dirname,
+          './node_modules/@mui/styled-engine-sc'
+        ),
       },
     },
   });

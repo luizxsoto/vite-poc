@@ -1,12 +1,13 @@
-import { AnyComponent } from '@/AnyComponent';
-import { envConfig } from './config';
+import { Contexts } from './contexts';
+import { Routes } from './routes';
+import { ThemeProvider } from './theme';
 
 export function App() {
   return (
-    <div>
-      <h1>Port: {envConfig.PORT}</h1>
-      <h1>App</h1>
-      <AnyComponent />
-    </div>
+    <Contexts>
+      <ThemeProvider>
+        <Routes />
+      </ThemeProvider>
+    </Contexts>
   );
 }
