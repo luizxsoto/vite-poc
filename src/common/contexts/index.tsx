@@ -1,7 +1,8 @@
-import { ThemeProvider } from '@/modules/organization/contexts/theme';
+import { AuthProvider } from '@/modules/auth/contexts/auth';
+import { ThemeProvider } from './theme';
 
 export function Contexts({ children }: { children: React.ReactNode }) {
-  return [ThemeProvider].reduce(
+  return [ThemeProvider, AuthProvider].reduce(
     (AccumulatedProviders, CurrentProvider) =>
       ({ children: currentChildren }: { children: React.ReactNode }) => {
         return (

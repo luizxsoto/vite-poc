@@ -9,8 +9,13 @@ services:
       - '${VITE_PORT}'
     ports:
       - '${VITE_PORT}:${VITE_PORT}'
-      - 9229:9229
+      - 9228:9229
     volumes:
       - .:/app
     env_file:
       - .env
+
+networks:
+  ecommerce:
+    name: ecommerce
+    driver: bridge
