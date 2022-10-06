@@ -3,7 +3,7 @@ import {
   ThemeProvider as MaterialThemeProvider,
 } from '@mui/material/styles';
 import CssBaseline from '@mui/material/CssBaseline';
-import { useTheme } from '@/contexts/theme';
+import { useTheme } from '@/modules/organization/contexts/theme';
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
   const { mode, setTheme } = useTheme();

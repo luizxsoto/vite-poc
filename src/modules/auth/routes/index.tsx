@@ -1,9 +1,9 @@
 import { Routes, Route, Navigate } from 'react-router-dom';
 
-import { Login } from '@/pages/Login';
-import { NotFound } from '@/pages/NotFound';
+import { Login } from '@/modules/auth/pages/Login';
+import { NotFound } from '@/common/pages/NotFound';
 
-export function SessionRoutes() {
+export function AuthRoutes() {
   return (
     <Routes>
       <Route path="/login" element={<Login />} />

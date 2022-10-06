@@ -1,6 +1,6 @@
-import { Contexts } from './contexts';
-import { Routes } from './routes';
-import { ThemeProvider } from './theme';
+import { Contexts } from './common/contexts';
+import { Routes } from './common/routes';
+import { ThemeProvider } from './modules/organization/theme';
 
 export function App() {
   return (

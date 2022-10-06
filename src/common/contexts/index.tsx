@@ -1,4 +1,4 @@
-import { ThemeProvider } from './theme';
+import { ThemeProvider } from '@/modules/organization/contexts/theme';
 
 export function Contexts({ children }: { children: React.ReactNode }) {
   return [ThemeProvider].reduce(
