@@ -2,10 +2,9 @@ import { envConfig } from '@/common/config';
 import { StatusCodes } from '@/common/constants';
 import { i18n } from '@/common/i18n';
 
-export class ApplicationException {
+export class ApplicationException extends Error {
   public name = 'ApplicationException';
   public code = StatusCodes.INTERNAL;
-  public message = i18n().common.exceptions.applicationException;
   public details?: Record<string, unknown> | string;
   public originalError?: Error;
 
@@ -13,6 +12,7 @@ export class ApplicationException {
     originalError,
     ...error
   }: Partial<ApplicationException> & { originalError?: Error }) {
+    super(i18n().common.exceptions.applicationException);
     const details =
       envConfig.NODE_ENV === 'production'
         ? undefined

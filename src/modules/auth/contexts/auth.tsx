@@ -1,15 +1,13 @@
 import { createContext, useContext, useState, useCallback } from 'react';
-import { toast } from 'react-toastify';
 
 import { loginApplicationService } from '@/modules/auth/application-services';
 import { LoginProps } from '@/modules/auth/contracts/application-services';
 import { User } from '@/modules/auth/contracts/models';
-import { ValidationException } from '@/common/exceptions';
-import { i18n } from '@/common/i18n';
+import { useErrorHandler } from '@/common/contexts/error-handler';
 
 type AuthModeStateProps = {
   loginLoading: boolean;
-  loginValidations?: Record<keyof LoginProps, string>;
+  loginValidations?: Record<string, string>;
   loggedUser?: User;
 };
 type AuthModeContextProps = AuthModeStateProps & {
@@ -26,6 +24,7 @@ const AuthContext = createContext<AuthModeContextProps>(
 );
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
+  const { errorHandler } = useErrorHandler();
   const [state, setState] = useState<AuthModeStateProps>(INITIAL_STATE);
 
   const setStateSafety = useCallback(
@@ -44,31 +43,6 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
     [setState]
   );
 
-  const errorHandler = useCallback(
-    (error: any): void => {
-      if (error instanceof ValidationException) {
-        setStateSafety({
-          loginValidations: error.validations.reduce(
-            (accumulatedValidations, currentValidation) => ({
-              ...accumulatedValidations,
-              [currentValidation.field]: currentValidation.message,
-            }),
-            {}
-          ) as Record<keyof LoginProps, string>,
-        });
-
-        toast.warn(i18n().common.exceptions.validationException, {
-          toastId: 'ValidationException',
-        });
-      } else {
-        toast.warn(i18n().common.exceptions.applicationException, {
-          toastId: 'ApplicationException',
-        });
-      }
-    },
-    [setStateSafety]
-  );
-
   const login = useCallback(
     async (loginProps: LoginProps) => {
       try {
@@ -78,8 +52,12 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
 
         setStateSafety({ loggedUser: serviceResult, loginLoading: false });
       } catch (error) {
-        errorHandler(error);
         setStateSafety({ loginLoading: false });
+        errorHandler({
+          error: error as Error,
+          setValidations: validations =>
+            setStateSafety({ loginValidations: validations }),
+        });
       }
     },
     [setStateSafety]

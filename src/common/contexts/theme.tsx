@@ -1,24 +1,24 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 
-type ThemeModeStateProps = {
+type ThemeStateProps = {
   mode: 'dark' | 'light';
 };
-type ThemeModeContextProps = ThemeModeStateProps & {
-  setTheme: (newData: ThemeModeStateProps) => void;
+type ThemeContextProps = ThemeStateProps & {
+  setTheme: (newData: ThemeStateProps) => void;
 };
 
-const INITIAL_STATE: ThemeModeStateProps = {
+const INITIAL_STATE: ThemeStateProps = {
   mode: 'dark',
 };
-const ThemeContext = createContext<ThemeModeContextProps>(
-  INITIAL_STATE as ThemeModeContextProps
+const ThemeContext = createContext<ThemeContextProps>(
+  INITIAL_STATE as ThemeContextProps
 );
 
 export function ThemeProvider({ children }: { children: React.ReactNode }) {
-  const [state, setState] = useState<ThemeModeStateProps>(INITIAL_STATE);
+  const [state, setState] = useState<ThemeStateProps>(INITIAL_STATE);
 
   const setTheme = useCallback(
-    (newData: ThemeModeStateProps) => {
+    (newData: ThemeStateProps) => {
       setState(oldData => ({ ...oldData, ...newData }));
     },
     [setState]
@@ -31,7 +31,7 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function useTheme(): ThemeModeContextProps {
+export function useTheme(): ThemeContextProps {
   const context = useContext(ThemeContext);
 
   return context;

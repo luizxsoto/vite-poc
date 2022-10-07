@@ -41,6 +41,6 @@ export async function apiCall<RequestData, ResponseData>({
     })
     .then(res => res.data)
     .catch((error: AxiosError<ApplicationException>) => {
-      throw getExceptionByName(error.response?.data);
+      throw getExceptionByName(error.response?.data || error);
     });
 }
