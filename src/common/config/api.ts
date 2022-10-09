@@ -19,6 +19,10 @@ const axiosClient = axios.create({
   timeout: 20000,
 });
 
+export function setApiToken(token: string) {
+  axiosClient.defaults.headers.token = `Bearer ${token}`;
+}
+
 export async function apiCall<RequestData, ResponseData>({
   method,
   url,

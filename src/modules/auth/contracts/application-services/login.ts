@@ -5,4 +5,4 @@ export interface LoginProps {
   password: string;
 }
 
-export type LoginResponse = User;
+export type LoginResponse = User & { bearerToken: string };
