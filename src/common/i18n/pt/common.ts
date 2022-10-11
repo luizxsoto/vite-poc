@@ -1,4 +1,20 @@
 export const commonPt = {
+  components: {
+    table: {
+      body: {
+        confirm: 'Sim',
+        cancel: 'Não',
+      },
+      head: {
+        actions: 'Ações',
+      },
+      header: {
+        selectAField: 'Selecione um campo',
+        atField: 'No campo:',
+        searchFor: 'Buscar por:',
+      },
+    },
+  },
   exceptions: {
     applicationException: 'Ocorreu um erro inesperado',
     validationException: 'Ocorreu um erro de validação',

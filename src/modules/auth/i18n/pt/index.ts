@@ -8,7 +8,23 @@ export const authPt = {
         confirmButton: 'ENTRAR',
       },
       forgotPasswordButton: 'Esqueceu sua senha?',
-      copyright: 'Direitos Reservados © Powered by Positivo Tecnologia ™',
+      copyright: 'Positivo Tecnologia ™',
+    },
+    users: {
+      list: {
+        title: 'Usuários',
+        tableColumn: {
+          id: 'Código',
+          name: 'Nome',
+          email: 'E-mail',
+        },
+        action: {
+          show: 'Detalhes',
+          update: 'Atualizar',
+          remove: 'Remover',
+          confirmRemove: 'Deseja mesmo remover este registro?',
+        },
+      },
     },
   },
 };

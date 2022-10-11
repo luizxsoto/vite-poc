@@ -9,3 +9,7 @@ export enum StatusCodes {
   UNPROCESSABLE_ENTITY = 422,
   INTERNAL = 500,
 }
+
+export type SortTypes = 'desc' | 'asc';
+
+export type SearchTypes = 'normal' | 'relation';

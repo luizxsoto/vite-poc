@@ -20,7 +20,7 @@ import {
 } from './styles';
 
 export function Login(): JSX.Element {
-  changePageTitle('Login');
+  changePageTitle(i18n().modules.auth.pages.login.title);
 
   return (
     <Container>

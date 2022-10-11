@@ -14,34 +14,34 @@ import {
   InputAdornment,
 } from './styles';
 
-type FormTextFieldProps = {
+type FormTextInputProps = {
   name: string;
   label: string;
   mask?: (value: string) => string;
   helperText?: string;
   required?: boolean;
   gridProps?: GridProps;
-  showLoading?: boolean;
+  loading?: boolean;
   inputProps?: TextFieldProps;
   disabled?: boolean;
   inputBox?: 'outlined' | 'filled' | 'standard';
   endAdornment?: JSX.Element;
 };
 
-export function FormTextField({
+export function FormTextInput({
   name,
   label,
   mask,
   helperText,
   required,
   gridProps,
-  showLoading,
+  loading,
   inputProps,
   disabled,
   inputBox,
   endAdornment,
   ...rest
-}: FormTextFieldProps) {
+}: FormTextInputProps) {
   const { fieldName, registerField, error, clearError, defaultValue } =
     useField(name);
 
@@ -103,11 +103,11 @@ export function FormTextField({
       ref: inputRef.current,
       path: 'value',
     });
-  }, [fieldName, manualChange, registerField, showLoading]);
+  }, [fieldName, manualChange, registerField, loading]);
 
   return (
     <Container {...gridProps}>
-      {showLoading ? (
+      {loading ? (
         <FormSkeleton />
       ) : (
         <FormControl error={!!error} {...rest}>

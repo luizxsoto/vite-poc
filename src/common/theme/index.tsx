@@ -18,7 +18,7 @@ function ThemeButton() {
   return (
     <IconButton
       onClick={handleSwitchTheme}
-      style={{ position: 'absolute', top: 8, right: 8 }}
+      style={{ position: 'absolute', zIndex: 999, top: 8, right: 8 }}
     >
       {mode === 'light' ? <Brightness4 /> : <Brightness7 />}
     </IconButton>
