@@ -22,13 +22,16 @@ export const Container = styled(MUIToolbar)`
 
 export const IconButton = styled(MUIIconButton).attrs({
   color: 'primary',
-})``;
+})`
+  width: 50px;
+  height: 50px;
+`;
 
 export const Typography = styled(MUITypography).attrs({
   variant: 'h6',
 })``;
 
 export const SearchIcon = styled(MUISearchIcon)`
-  width: 36px;
-  height: 36px;
+  width: 30px;
+  height: 30px;
 `;

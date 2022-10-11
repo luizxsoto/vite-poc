@@ -5,35 +5,35 @@ import { LoginProps } from '@/modules/auth/contracts/application-services';
 import { User } from '@/modules/auth/contracts/models';
 import { useErrorHandler } from '@/common/contexts/error-handler';
 
-type AuthModeStateProps = {
+type AuthStateProps = {
   loginLoading: boolean;
   loginValidations?: Record<string, string>;
   loggedUser?: User;
 };
-type AuthModeContextProps = AuthModeStateProps & {
+type AuthContextProps = AuthStateProps & {
   login: (loginProps: LoginProps) => Promise<void>;
 };
 
-const INITIAL_STATE: AuthModeStateProps = {
+const INITIAL_STATE: AuthStateProps = {
   loginLoading: false,
   loginValidations: undefined,
   loggedUser: undefined,
 };
-const AuthContext = createContext<AuthModeContextProps>(
-  INITIAL_STATE as AuthModeContextProps
+const AuthContext = createContext<AuthContextProps>(
+  INITIAL_STATE as AuthContextProps
 );
 
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { errorHandler } = useErrorHandler();
-  const [state, setState] = useState<AuthModeStateProps>(INITIAL_STATE);
+  const [state, setState] = useState<AuthStateProps>(INITIAL_STATE);
 
   const setStateSafety = useCallback(
     (
       newData:
-        | Partial<Partial<AuthModeStateProps>>
+        | Partial<Partial<AuthStateProps>>
         | ((
-            oldData: Partial<AuthModeStateProps>
-          ) => Partial<Partial<AuthModeStateProps>>)
+            oldData: Partial<AuthStateProps>
+          ) => Partial<Partial<AuthStateProps>>)
     ) => {
       if (typeof newData === 'function')
         setState(oldData => ({ ...oldData, ...newData(oldData) }));
@@ -70,7 +70,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 }
 
-export function useAuth(): AuthModeContextProps {
+export function useAuth(): AuthContextProps {
   const context = useContext(AuthContext);
 
   return context;

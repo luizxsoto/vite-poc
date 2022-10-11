@@ -8,7 +8,7 @@ import { envConfig } from './env';
 type ApiCallProps<RequestData> = {
   method: string;
   url: string;
-  params?: Record<string, unknown>;
+  params?: RequestData;
   data?: RequestData;
   headers?: Record<string, unknown>;
   timeout?: number;
@@ -19,8 +19,8 @@ const axiosClient = axios.create({
   timeout: 20000,
 });
 
-export function setApiToken(token: string) {
-  axiosClient.defaults.headers.token = `Bearer ${token}`;
+export function setClientToken(token: string) {
+  axiosClient.defaults.headers.authorization = `Bearer ${token}`;
 }
 
 export async function apiCall<RequestData, ResponseData>({

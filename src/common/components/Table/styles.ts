@@ -13,6 +13,7 @@ export const Container = styled(MUIPaper)`
 
 export const TableContainer = styled(MUITableContainer)<{ height?: string }>`
   height: ${({ height }) => height || 'calc(100vh - 12rem)'};
+  position: relative;
 `;
 
 export const TableWrapper = styled(MUITable).attrs({
@@ -24,10 +25,10 @@ export const CircularProgressContainer = styled(MUIGrid)`
   display: flex;
   align-items: center;
   justify-content: center;
-  position: sticky;
-  top: 80;
-  bottom: 80;
+  z-index: 999;
   width: 100%;
   height: 100%;
-  background: ${({ theme }) => theme.palette.grey_scale_3.main};
+  position: absolute;
+  background: ${({ theme }) => theme.palette.common.black};
+  opacity: 50%;
 `;

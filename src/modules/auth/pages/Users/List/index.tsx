@@ -1,6 +1,9 @@
 import { useEffect, useMemo, useState } from 'react';
 
 import { changePageTitle } from '@/common/helpers';
+import { i18n } from '@/common/i18n';
+import { useUser } from '@/modules/auth/contexts/user';
+
 import {
   ActionFunction,
   ColumnInfo,
@@ -9,11 +12,10 @@ import {
 import { FilterByOption } from '@/common/components/Table/Header';
 
 import { Table, Container } from './styles';
-import { i18n } from '@/common/i18n';
+import { User } from '@/modules/auth/contracts/models';
 
 const columnInfos: ColumnInfo[] = [
   { key: 'id', label: i18n().modules.auth.pages.users.list.tableColumn.id },
-  { key: 'name', label: i18n().modules.auth.pages.users.list.tableColumn.name },
   {
     key: 'email',
     label: i18n().modules.auth.pages.users.list.tableColumn.email,
@@ -21,18 +23,6 @@ const columnInfos: ColumnInfo[] = [
 ];
 
 const filterByOptions: FilterByOption[] = [
-  {
-    key: 'id',
-    label: i18n().modules.auth.pages.users.list.tableColumn.id,
-    type: 'normal',
-    format: 'integer',
-  },
-  {
-    key: 'name',
-    label: i18n().modules.auth.pages.users.list.tableColumn.name,
-    type: 'normal',
-    format: 'string',
-  },
   {
     key: 'email',
     label: i18n().modules.auth.pages.users.list.tableColumn.email,
@@ -43,42 +33,18 @@ const filterByOptions: FilterByOption[] = [
 
 export function UsersList(): JSX.Element {
   changePageTitle(i18n().modules.auth.pages.users.list.title);
+
   const [pageLoaded, setPageLoaded] = useState(false);
-  const registerList = Array.from({ length: 100 }).map((item, index) => ({
-    id: `any_id_${index}`,
-    name: `any_name_${index}`,
-    email: `any_email_${index}`,
-  }));
-  const listLoading = false;
+
+  const { userList, listLoading, list } = useUser();
   const validations = {};
 
-  function onSubmitSearch({
-    filterBy,
-    data,
-    order,
-    orderBy,
-    page,
-    perPage,
-  }: FilterProps): void {
-    const searchData = {
-      order,
-      orderBy,
-      page,
-      perPage,
-      forSelector: false,
-      data:
-        data && filterBy
-          ? [
-              {
-                field: filterBy,
-                type: 'normal',
-                values: data.split(';'),
-              },
-            ]
-          : undefined,
-    };
-
-    console.log('onSubmitSearch', { searchData });
+  function onSubmitSearch({ filterBy, data }: FilterProps): void {
+    if (filterBy && data) {
+      list({ [filterBy]: data });
+    } else {
+      list({});
+    }
   }
 
   function addFunction() {
@@ -123,27 +89,20 @@ export function UsersList(): JSX.Element {
   }, []);
 
   useEffect(() => {
-    if (!registerList.length && !pageLoaded) {
-      console.log('useEffect', {
-        order: 'asc',
-        orderBy: 'id',
-        page: 1,
-        perPage: 10,
-        forSelector: false,
-        data: [],
-      });
+    if (!userList.length && !pageLoaded) {
+      list({});
     }
 
     setPageLoaded(true);
-  }, [registerList.length, pageLoaded]);
+  }, [userList.length, pageLoaded, list]);
 
   return (
     <Container>
       <Table
         title={i18n().modules.auth.pages.users.list.title}
         registerKey="id"
-        registerList={registerList}
-        listTotal={registerList.length}
+        registerList={userList as (Record<string, unknown> & User)[]}
+        listTotal={userList.length}
         addFunction={addFunction}
         columnInfos={columnInfos}
         onSubmitSearch={onSubmitSearch}

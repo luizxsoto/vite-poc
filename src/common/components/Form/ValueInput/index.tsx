@@ -16,29 +16,30 @@ import {
   NumericFormat,
   RequiredCharacter,
 } from './styles';
-import { InputProps } from '@mui/material';
 
-const NumberFormatCustom = forwardRef(function NumberFormatCustom(
-  { ...rest }: NumericFormatProps,
-  inputRef
-): JSX.Element {
-  return (
-    <NumericFormat
-      getInputRef={inputRef}
-      thousandSeparator="."
-      decimalSeparator=","
-      fixedDecimalScale
-      decimalScale={2}
-      allowNegative={false}
-      isAllowed={values => {
-        const { floatValue } = values;
+const NumberFormatCustom = forwardRef<typeof NumericFormat, NumericFormatProps>(
+  function NumberFormatCustom(
+    { ...rest }: NumericFormatProps,
+    inputRef
+  ): JSX.Element {
+    return (
+      <NumericFormat
+        getInputRef={inputRef}
+        thousandSeparator="."
+        decimalSeparator=","
+        fixedDecimalScale
+        decimalScale={2}
+        allowNegative={false}
+        isAllowed={values => {
+          const { floatValue } = values;
 
-        return floatValue === undefined || floatValue <= 999999999.99;
-      }}
-      {...rest}
-    />
-  );
-});
+          return floatValue === undefined || floatValue <= 999999999.99;
+        }}
+        {...rest}
+      />
+    );
+  }
+);
 
 type FormTextInputProps = {
   name: string;
@@ -103,8 +104,8 @@ export function FormValueInput({
             error={!!error}
             defaultValue={defaultValue}
             {...rest}
+            inputProps={{ ...inputProps } as InputBaseComponentProps}
             InputProps={{
-              ...(inputProps as InputProps),
               endAdornment: endAdornment && (
                 <InputAdornment position="end">{endAdornment}</InputAdornment>
               ),

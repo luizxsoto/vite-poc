@@ -15,7 +15,6 @@ export const authPt = {
         title: 'Usuários',
         tableColumn: {
           id: 'Código',
-          name: 'Nome',
           email: 'E-mail',
         },
         action: {

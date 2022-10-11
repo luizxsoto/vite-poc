@@ -146,27 +146,26 @@ export function Table<RegisterKey extends string>({
         loading={loading}
       />
       <TableContainer height={height} id="table-container">
-        {loading ? (
+        {loading && (
           <CircularProgressContainer>
             <CircularProgress />
           </CircularProgressContainer>
-        ) : (
-          <TableWrapper>
-            <Head
-              columnInfos={columnInfos}
-              order={order}
-              orderBy={orderBy}
-              onRequestSort={onRequestSort}
-              actionFunctions={actionFunctions}
-            />
-            <Body
-              registerKey={registerKey}
-              registerList={registerList}
-              columnInfos={columnInfos}
-              actionFunctions={actionFunctions}
-            />
-          </TableWrapper>
         )}
+        <TableWrapper>
+          <Head
+            columnInfos={columnInfos}
+            order={order}
+            orderBy={orderBy}
+            onRequestSort={onRequestSort}
+            actionFunctions={actionFunctions}
+          />
+          <Body
+            registerKey={registerKey}
+            registerList={registerList}
+            columnInfos={columnInfos}
+            actionFunctions={actionFunctions}
+          />
+        </TableWrapper>
       </TableContainer>
       <Pagination
         count={listTotal}

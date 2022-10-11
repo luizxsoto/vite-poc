@@ -1,4 +1,4 @@
-import { apiCall, setApiToken } from '@/common/config';
+import { apiCall, setClientToken } from '@/common/config';
 import {
   LoginProps,
   LoginResponse,
@@ -13,7 +13,7 @@ export async function loginApplicationService(loginProps: LoginProps) {
   });
 
   saveToken(result.bearerToken);
-  setApiToken(result.bearerToken);
+  setClientToken(result.bearerToken);
 
   return result;
 }

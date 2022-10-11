@@ -11,7 +11,7 @@ import { i18n } from '@/common/i18n';
 type ErrorHandlerStateProps = {};
 type ErrorHandlerProps = {
   error: Error;
-  setValidations: (validations: Record<string, string>) => void;
+  setValidations?: (validations: Record<string, string>) => void;
 };
 type ErrorHandlerContextProps = ErrorHandlerStateProps & {
   errorHandler: (data: ErrorHandlerProps) => void;
@@ -33,7 +33,7 @@ export function ErrorHandlerProvider({
     ({ error, setValidations }: ErrorHandlerProps) => {
       switch ((error as ValidationException).name || '') {
         case 'ValidationException':
-          setValidations(
+          setValidations?.(
             (error as ValidationException).validations.reduce(
               (accumulatedValidations, currentValidation) => ({
                 ...accumulatedValidations,
