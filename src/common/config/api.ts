@@ -5,11 +5,11 @@ import { getExceptionByName } from '@/common/helpers';
 
 import { envConfig } from './env';
 
-type ApiCallProps<RequestData> = {
+type ApiCallParams<RequestData> = {
   method: string;
   url: string;
   params?: RequestData;
-  data?: RequestData;
+  body?: RequestData;
   headers?: Record<string, unknown>;
   timeout?: number;
 };
@@ -27,16 +27,16 @@ export async function apiCall<RequestData, ResponseData>({
   method,
   url,
   params,
-  data,
+  body,
   headers,
   timeout,
-}: ApiCallProps<RequestData>): Promise<ResponseData> {
+}: ApiCallParams<RequestData>): Promise<ResponseData> {
   return await axiosClient
-    .request<ApiCallProps<RequestData>['data'], AxiosResponse<ResponseData>>({
+    .request<ApiCallParams<RequestData>['body'], AxiosResponse<ResponseData>>({
       method,
       url,
       params,
-      data,
+      data: body,
       headers: {
         ...axiosClient.defaults.headers,
         ...headers,

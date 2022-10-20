@@ -7,12 +7,13 @@ import { useUser } from '@/modules/auth/contexts/user';
 import {
   ActionFunction,
   ColumnInfo,
-  FilterProps,
+  FilterParams,
 } from '@/common/components/Table';
 import { FilterByOption } from '@/common/components/Table/Header';
 
 import { Table, Container } from './styles';
 import { User } from '@/modules/auth/contracts/models';
+import { useNavigate } from 'react-router-dom';
 
 const columnInfos: ColumnInfo[] = [
   { key: 'id', label: i18n().modules.auth.pages.users.list.tableColumn.id },
@@ -34,12 +35,14 @@ const filterByOptions: FilterByOption[] = [
 export function UsersList(): JSX.Element {
   changePageTitle(i18n().modules.auth.pages.users.list.title);
 
+  const navigate = useNavigate();
   const [pageLoaded, setPageLoaded] = useState(false);
 
   const { userList, listLoading, list } = useUser();
+  // TODO: Use correct validations, using onError, like user Form
   const validations = {};
 
-  function onSubmitSearch({ filterBy, data }: FilterProps): void {
+  function onSubmitSearch({ filterBy, data }: FilterParams): void {
     if (filterBy && data) {
       list({ [filterBy]: data });
     } else {
@@ -48,7 +51,7 @@ export function UsersList(): JSX.Element {
   }
 
   function addFunction() {
-    console.log('addFunction');
+    navigate('/form');
   }
 
   const actionFunctions = useMemo<ActionFunction[]>(() => {
@@ -56,30 +59,27 @@ export function UsersList(): JSX.Element {
       {
         key: 'show',
         label: i18n().modules.auth.pages.users.list.action.show,
-        handle: register => {
-          console.log(
-            i18n().modules.auth.pages.users.list.action.show,
-            register
-          );
+        handle: model => {
+          console.log(i18n().modules.auth.pages.users.list.action.show, model);
         },
       },
       {
         key: 'update',
         label: i18n().modules.auth.pages.users.list.action.update,
-        handle: register => {
+        handle: model => {
           console.log(
             i18n().modules.auth.pages.users.list.action.update,
-            register
+            model
           );
         },
       },
       {
         key: 'remove',
         label: i18n().modules.auth.pages.users.list.action.remove,
-        handle: register => {
+        handle: model => {
           console.log(
             i18n().modules.auth.pages.users.list.action.remove,
-            register
+            model
           );
         },
         confirmMessage:
@@ -100,8 +100,8 @@ export function UsersList(): JSX.Element {
     <Container>
       <Table
         title={i18n().modules.auth.pages.users.list.title}
-        registerKey="id"
-        registerList={userList as (Record<string, unknown> & User)[]}
+        modelKey="id"
+        modelList={userList as (Record<string, unknown> & User)[]}
         listTotal={userList.length}
         addFunction={addFunction}
         columnInfos={columnInfos}

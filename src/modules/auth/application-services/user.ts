@@ -1,13 +1,23 @@
 import { apiCall } from '@/common/config';
 import {
-  UserListProps,
-  UserListResponse,
+  UserCreateParams,
+  UserCreateResult,
+  UserListParams,
+  UserListResult,
 } from '@/modules/auth/contracts/application-services';
 
-export async function listUserApplicationService(listProps: UserListProps) {
-  return apiCall<UserListProps, UserListResponse>({
+export async function userListApplicationService(params: UserListParams) {
+  return apiCall<UserListParams, UserListResult>({
     method: 'get',
     url: '/users',
-    params: listProps,
+    params: params,
+  });
+}
+
+export async function userCreateApplicationService(params: UserCreateParams) {
+  return apiCall<UserCreateParams, UserCreateResult>({
+    method: 'post',
+    url: '/users',
+    body: params,
   });
 }

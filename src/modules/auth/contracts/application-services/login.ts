@@ -1,8 +1,8 @@
 import { User } from '@/modules/auth/contracts/models';
 
-export interface LoginProps {
+export interface LoginParams {
   email: string;
   password: string;
 }
 
-export type LoginResponse = User & { bearerToken: string };
+export type LoginResult = User & { bearerToken: string };

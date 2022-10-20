@@ -1,9 +1,9 @@
-import { LoginProps } from '@/modules/auth/contracts/application-services';
+import { LoginParams } from '@/modules/auth/contracts/application-services';
 
-export function loginSanitizer(loginProps: LoginProps): LoginProps {
-  const sanitizeddData: LoginProps = {
-    email: (loginProps.email || '').trim(),
-    password: (loginProps.password || '').trim(),
+export function loginSanitizer(params: LoginParams): LoginParams {
+  const sanitizeddData: LoginParams = {
+    email: (params.email || '').trim(),
+    password: (params.password || '').trim(),
   };
 
   return sanitizeddData;

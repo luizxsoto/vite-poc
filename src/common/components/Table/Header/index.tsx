@@ -20,7 +20,7 @@ import {
   FormValueInput,
 } from './styles';
 
-export type FilterByProps = { filterBy?: string; data?: string };
+export type FilterByParams = { filterBy?: string; data?: string };
 
 const validatorSchema = yup.object().shape(
   {
@@ -47,10 +47,10 @@ const validatorSchema = yup.object().shape(
   ]
 );
 
-function sanitizer(register: FilterByProps): FilterByProps {
+function sanitizer(params: FilterByParams): FilterByParams {
   return {
-    filterBy: register.filterBy,
-    data: register.data,
+    filterBy: params.filterBy,
+    data: params.data,
   };
 }
 
@@ -65,7 +65,7 @@ type HeaderProps = {
   title: string;
   formRef: RefObject<FormHandles>;
   addFunction?: () => void;
-  onSubmitSearch: (register: FilterByProps) => void;
+  onSubmitSearch: (params: FilterByParams) => void;
   filterByOptions: FilterByOption[];
   validations?: Record<string, string>;
   loading?: boolean;
@@ -133,7 +133,7 @@ export function Header({
           <AddIcon />
         </IconButton>
       )}
-      <FormContainer<FilterByProps>
+      <FormContainer<FilterByParams>
         formRef={formRef}
         validatorSchema={validatorSchema}
         sanitizer={sanitizer}

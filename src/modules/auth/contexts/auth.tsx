@@ -1,22 +1,22 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 
 import { loginApplicationService } from '@/modules/auth/application-services';
-import { LoginProps } from '@/modules/auth/contracts/application-services';
+import { LoginParams } from '@/modules/auth/contracts/application-services';
 import { User } from '@/modules/auth/contracts/models';
 import { useErrorHandler } from '@/common/contexts/error-handler';
 
 type AuthStateProps = {
   loginLoading: boolean;
-  loginValidations?: Record<string, string>;
+  validations?: Record<string, string>;
   loggedUser?: User;
 };
 type AuthContextProps = AuthStateProps & {
-  login: (loginProps: LoginProps) => Promise<void>;
+  login: (params: LoginParams) => Promise<void>;
 };
 
 const INITIAL_STATE: AuthStateProps = {
   loginLoading: false,
-  loginValidations: undefined,
+  validations: undefined,
   loggedUser: undefined,
 };
 const AuthContext = createContext<AuthContextProps>(
@@ -30,10 +30,8 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   const setStateSafety = useCallback(
     (
       newData:
-        | Partial<Partial<AuthStateProps>>
-        | ((
-            oldData: Partial<AuthStateProps>
-          ) => Partial<Partial<AuthStateProps>>)
+        | Partial<AuthStateProps>
+        | ((oldData: AuthStateProps) => Partial<AuthStateProps>)
     ) => {
       if (typeof newData === 'function')
         setState(oldData => ({ ...oldData, ...newData(oldData) }));
@@ -44,19 +42,18 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const login = useCallback(
-    async (loginProps: LoginProps) => {
+    async (params: LoginParams) => {
       try {
         setStateSafety({ loginLoading: true });
 
-        const serviceResult = await loginApplicationService(loginProps);
+        const serviceResult = await loginApplicationService(params);
 
         setStateSafety({ loggedUser: serviceResult, loginLoading: false });
       } catch (error) {
         setStateSafety({ loginLoading: false });
         errorHandler({
           error: error as Error,
-          setValidations: validations =>
-            setStateSafety({ loginValidations: validations }),
+          setValidations: validations => setStateSafety({ validations }),
         });
       }
     },

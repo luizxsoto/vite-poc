@@ -4,7 +4,7 @@ import { FormHandles } from '@unform/core';
 import { debounceEvent } from '@/common/helpers/debounce';
 import { SortTypes } from '@/common/constants';
 
-import { Header, FilterByProps, FilterByOption } from './Header';
+import { Header, FilterByParams, FilterByOption } from './Header';
 import { Head } from './Head';
 import { Body } from './Body';
 import { Pagination } from './Pagination';
@@ -25,11 +25,11 @@ export type ColumnInfo = {
 export type ActionFunction = {
   key: string;
   label: string | ReactNode;
-  handle: (register: Record<string, unknown>) => void;
+  handle: (model: Record<string, unknown>) => void;
   confirmMessage?: string;
 };
 
-export type FilterProps = {
+export type FilterParams = {
   filterBy?: string;
   data?: string;
   page: number;
@@ -38,13 +38,13 @@ export type FilterProps = {
   orderBy: string;
 };
 
-type TableProps<RegisterKey extends string> = {
+type TableProps<ModelKey extends string> = {
   title: string;
-  registerKey: RegisterKey;
-  registerList: (Record<string, unknown> & Record<RegisterKey, string>)[];
+  modelKey: ModelKey;
+  modelList: (Record<string, unknown> & Record<ModelKey, string>)[];
   listTotal: number;
   columnInfos: ColumnInfo[];
-  onSubmitSearch: (register: FilterProps) => void;
+  onSubmitSearch: (params: FilterParams) => void;
   filterByOptions: FilterByOption[];
   addFunction?: () => void;
   actionFunctions?: ActionFunction[];
@@ -52,10 +52,10 @@ type TableProps<RegisterKey extends string> = {
   loading?: boolean;
 };
 
-export function Table<RegisterKey extends string>({
+export function Table<ModelKey extends string>({
   title,
-  registerKey,
-  registerList,
+  modelKey,
+  modelList,
   listTotal,
   columnInfos,
   onSubmitSearch,
@@ -64,7 +64,7 @@ export function Table<RegisterKey extends string>({
   actionFunctions,
   validations,
   loading,
-}: TableProps<RegisterKey>): JSX.Element {
+}: TableProps<ModelKey>): JSX.Element {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(50);
   const [order, setOrder] = useState<SortTypes>('asc');
@@ -72,7 +72,7 @@ export function Table<RegisterKey extends string>({
 
   const formRef = useRef<FormHandles>(null);
 
-  function handleSubmitSearch(formData: FilterByProps) {
+  function handleSubmitSearch(formData: FilterByParams) {
     setPage(0);
 
     onSubmitSearch({
@@ -158,8 +158,8 @@ export function Table<RegisterKey extends string>({
             actionFunctions={actionFunctions}
           />
           <Body
-            registerKey={registerKey}
-            registerList={registerList}
+            modelKey={modelKey}
+            modelList={modelList}
             columnInfos={columnInfos}
             actionFunctions={actionFunctions}
           />

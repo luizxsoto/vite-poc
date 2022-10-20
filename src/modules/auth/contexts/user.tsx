@@ -1,19 +1,33 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 
-import { listUserApplicationService } from '@/modules/auth/application-services';
-import { UserListProps } from '@/modules/auth/contracts/application-services';
+import {
+  userCreateApplicationService,
+  userListApplicationService,
+} from '@/modules/auth/application-services';
+import {
+  UserCreateParams,
+  UserListParams,
+} from '@/modules/auth/contracts/application-services';
 import { User } from '@/modules/auth/contracts/models';
 import { useErrorHandler } from '@/common/contexts/error-handler';
 
 type UserStateProps = {
+  formLoading: boolean;
   listLoading: boolean;
   userList: User[];
 };
+type ContextHandlers = {
+  onSuccess: (serviceResult: User) => void;
+  onError: (error: { validations?: Record<string, string> }) => void;
+};
 type UserContextProps = UserStateProps & {
-  list: (listProps: UserListProps) => Promise<void>;
+  list: (params: UserListParams) => Promise<void>;
+  create: (params: UserCreateParams & ContextHandlers) => Promise<void>;
+  clearState: () => void;
 };
 
 const INITIAL_STATE: UserStateProps = {
+  formLoading: false,
   listLoading: false,
   userList: [],
 };
@@ -28,10 +42,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const setStateSafety = useCallback(
     (
       newData:
-        | Partial<Partial<UserStateProps>>
-        | ((
-            oldData: Partial<UserStateProps>
-          ) => Partial<Partial<UserStateProps>>)
+        | Partial<UserStateProps>
+        | ((oldData: UserStateProps) => Partial<UserStateProps>)
     ) => {
       if (typeof newData === 'function')
         setState(oldData => ({ ...oldData, ...newData(oldData) }));
@@ -42,11 +54,11 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   );
 
   const list = useCallback(
-    async (listProps: UserListProps) => {
+    async (params: UserListParams) => {
       try {
         setStateSafety({ listLoading: true });
 
-        const serviceResult = await listUserApplicationService(listProps);
+        const serviceResult = await userListApplicationService(params);
 
         setStateSafety({ listLoading: false, userList: serviceResult });
       } catch (error) {
@@ -57,8 +69,46 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     [setStateSafety]
   );
 
+  const create = useCallback(
+    async ({
+      onSuccess,
+      onError,
+      ...params
+    }: UserCreateParams & ContextHandlers) => {
+      try {
+        setStateSafety({ formLoading: true });
+
+        const serviceResult = await userCreateApplicationService(params);
+
+        setStateSafety(oldState => ({
+          formLoading: false,
+          userList: [serviceResult, ...oldState.userList],
+        }));
+
+        onSuccess(serviceResult);
+      } catch (error) {
+        setStateSafety({ formLoading: false });
+        errorHandler({
+          error: error as Error,
+          setValidations: validations => onError({ validations }),
+        });
+      }
+    },
+    [setStateSafety]
+  );
+
+  const clearState = useCallback((): void => {
+    setStateSafety(oldState => ({
+      ...oldState,
+      formLoading: false,
+      // TODO: Remove comments when implemented
+      // showLoading: false,
+      // registerShow: undefined,
+    }));
+  }, [setState]);
+
   return (
-    <UserContext.Provider value={{ ...state, list }}>
+    <UserContext.Provider value={{ ...state, list, create, clearState }}>
       {children}
     </UserContext.Provider>
   );

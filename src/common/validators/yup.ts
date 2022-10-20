@@ -1,18 +1,18 @@
 import * as yup from 'yup';
 
-type ValidateProps<Register> = {
-  formData: Register;
-  sanitizer: (register: Register) => Register;
-  validatorSchema: yup.SchemaOf<Register>;
+type ValidateParams<Model> = {
+  formData: Model;
+  sanitizer: (model: Model) => Model;
+  validatorSchema: yup.SchemaOf<Model>;
 };
 
-export async function validateYupSchema<Register>({
+export async function validateYupSchema<Model>({
   formData,
   sanitizer,
   validatorSchema,
-}: ValidateProps<Register>): Promise<{
-  parsedData?: Register;
-  errorMessages?: { [Prop in keyof Register]: string };
+}: ValidateParams<Model>): Promise<{
+  parsedData?: Model;
+  errorMessages?: { [Prop in keyof Model]: string };
 }> {
   try {
     const parsedData = sanitizer(formData);
@@ -23,10 +23,10 @@ export async function validateYupSchema<Register>({
   } catch (error) {
     if (!(error instanceof yup.ValidationError)) throw error;
 
-    const errorMessages = {} as { [Prop in keyof Register]: string };
+    const errorMessages = {} as { [Prop in keyof Model]: string };
 
     error.inner.forEach(err => {
-      if (err.path) errorMessages[err.path as keyof Register] = err.message;
+      if (err.path) errorMessages[err.path as keyof Model] = err.message;
     });
 
     return { errorMessages };

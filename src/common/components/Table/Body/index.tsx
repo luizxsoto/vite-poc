@@ -27,16 +27,16 @@ import {
 } from './styles';
 import { i18n } from '@/common/i18n';
 
-type BodyProps<RegisterKey extends string> = {
-  registerKey: RegisterKey;
-  registerList: (Record<string, unknown> & Record<RegisterKey, string>)[];
+type BodyProps<ModelKey extends string> = {
+  modelKey: ModelKey;
+  modelList: (Record<string, unknown> & Record<ModelKey, string>)[];
   columnInfos: ColumnInfo[];
   actionFunctions?: ActionFunction[];
 };
 
 type SelectedItem = {
   ref?: Element | ((element: Element) => Element) | null;
-  register?: Record<string, unknown>;
+  model?: Record<string, unknown>;
 };
 
 type DialogState = {
@@ -44,15 +44,15 @@ type DialogState = {
   actionFunction?: ActionFunction;
 };
 
-export function Body<RegisterKey extends string>({
-  registerKey,
-  registerList,
+export function Body<ModelKey extends string>({
+  modelKey,
+  modelList,
   columnInfos,
   actionFunctions,
-}: BodyProps<RegisterKey>): JSX.Element {
+}: BodyProps<ModelKey>): JSX.Element {
   const [selectedItem, setSelectedItem] = useState<SelectedItem>({
     ref: undefined,
-    register: undefined,
+    model: undefined,
   });
   const [dialogState, setDialogState] = useState<DialogState>({
     isOpen: false,
@@ -70,7 +70,7 @@ export function Body<RegisterKey extends string>({
   }, []);
 
   function handleCloseMenu() {
-    setSelectedItem({ ref: undefined, register: undefined });
+    setSelectedItem({ ref: undefined, model: undefined });
   }
 
   function handleOpenMenu(selectedItem: SelectedItem) {
@@ -82,8 +82,8 @@ export function Body<RegisterKey extends string>({
   }
 
   function handleConfirmAction() {
-    if (selectedItem.register)
-      dialogState?.actionFunction?.handle(selectedItem.register);
+    if (selectedItem.model)
+      dialogState?.actionFunction?.handle(selectedItem.model);
 
     handleCloseDialog();
     handleCloseMenu();
@@ -102,7 +102,7 @@ export function Body<RegisterKey extends string>({
       });
     }
 
-    if (selectedItem.register) actionFunction.handle(selectedItem.register);
+    if (selectedItem.model) actionFunction.handle(selectedItem.model);
 
     return handleCloseMenu();
   }
@@ -145,8 +145,8 @@ export function Body<RegisterKey extends string>({
         </DialogContent>
       </Dialog>
 
-      {registerList.map(itemData => (
-        <TableRow hover key={itemData[registerKey]}>
+      {modelList.map(itemData => (
+        <TableRow hover key={itemData[modelKey]}>
           {columnInfos.map(columnInfo => (
             <TableCell key={columnInfo.key}>
               {getColumnInfos(itemData, columnInfo.key)}
@@ -160,7 +160,7 @@ export function Body<RegisterKey extends string>({
                 onClick={(event: React.MouseEvent<HTMLButtonElement>) => {
                   handleOpenMenu({
                     ref: event.currentTarget,
-                    register: itemData,
+                    model: itemData,
                   });
                 }}
               >

@@ -9,16 +9,16 @@ import { validateYupSchema } from '@/common/validators';
 
 import { Container } from './styles';
 
-type FormContainerProps<Register> = {
+type FormContainerProps<Model> = {
   formRef: React.MutableRefObject<FormHandles | null>;
-  validatorSchema: SchemaOf<Register>;
-  sanitizer: (register: Register) => Register;
-  onSubmit: (register: Register) => void;
+  validatorSchema: SchemaOf<Model>;
+  sanitizer: (model: Model) => Model;
+  onSubmit: (model: Model) => void;
   children: React.ReactNode;
-  initialData?: Register;
+  initialData?: Model;
 };
 
-export function FormContainer<Register>({
+export function FormContainer<Model>({
   formRef,
   validatorSchema,
   sanitizer,
@@ -26,9 +26,9 @@ export function FormContainer<Register>({
   children,
   initialData,
   ...rest
-}: FormContainerProps<Register>): JSX.Element {
-  async function handleSubmit(formData: Register): Promise<void> {
-    const { parsedData, errorMessages } = await validateYupSchema<Register>({
+}: FormContainerProps<Model>): JSX.Element {
+  async function handleSubmit(formData: Model): Promise<void> {
+    const { parsedData, errorMessages } = await validateYupSchema<Model>({
       formData,
       sanitizer,
       validatorSchema,

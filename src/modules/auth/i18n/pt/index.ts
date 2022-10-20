@@ -3,14 +3,27 @@ export const authPt = {
     login: {
       title: 'Entrar',
       form: {
-        emailInput: 'Informe seu email',
-        passwordInput: 'Informe seu senha',
-        confirmButton: 'ENTRAR',
+        inputs: {
+          email: 'Informe seu email',
+          password: 'Informe seu senha',
+        },
+        buttons: {
+          confirm: 'ENTRAR',
+        },
       },
       forgotPasswordButton: 'Esqueceu sua senha?',
       copyright: 'Positivo Tecnologia ™',
     },
     users: {
+      form: {
+        title: 'Usuários',
+        content: {
+          inputs: {
+            email: 'Informe seu email',
+            password: 'Informe seu senha',
+          },
+        },
+      },
       list: {
         title: 'Usuários',
         tableColumn: {
