@@ -2,6 +2,7 @@ export const commonPt = {
   components: {
     table: {
       body: {
+        attention: 'Atenção!',
         confirm: 'Sim',
         cancel: 'Não',
       },

@@ -1,5 +1,3 @@
-import { toast } from 'react-toastify';
-
 import { i18n } from '@/common/i18n';
 import { changePageTitle } from '@/common/helpers';
 
@@ -38,7 +36,7 @@ export function Login(): JSX.Element {
 
           <LoginForm />
 
-          <Button onClick={() => toast('Não implementado')}>
+          <Button onClick={() => console.log('onClick')}>
             {i18n().modules.auth.pages.login.forgotPasswordButton}
           </Button>
 

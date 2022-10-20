@@ -44,7 +44,7 @@ export function GoToTopButton({ elementId }: GoToTopButton): JSX.Element {
 
   return visible ? (
     <Container onClick={handleScrollToTop}>
-      <ArrowUpwardIcon fontSize="large" />
+      <ArrowUpwardIcon />
     </Container>
   ) : (
     <></>

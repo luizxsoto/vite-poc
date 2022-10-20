@@ -1,8 +1,11 @@
 import styled from 'styled-components';
 
 import MUIIconButton from '@mui/material/IconButton';
+import MUIArrowUpwardIcon from '@mui/icons-material/ArrowUpward';
 
-export { default as ArrowUpwardIcon } from '@mui/icons-material/ArrowUpward';
+export const ArrowUpwardIcon = styled(MUIArrowUpwardIcon).attrs({
+  fontSize: 'small',
+})``;
 
 export const Container = styled(MUIIconButton)`
   z-index: 999;

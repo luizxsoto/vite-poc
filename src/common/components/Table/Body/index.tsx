@@ -120,9 +120,11 @@ export function Body<RegisterKey extends string>({
     <Container>
       <Dialog open={dialogState.isOpen} onClose={handleCloseDialog}>
         <DialogHeader container>
-          <DialogTitle>Mensagem de Confirmação</DialogTitle>
+          <DialogTitle>
+            {i18n().common.components.table.body.attention}
+          </DialogTitle>
 
-          <IconButton onClick={handleCloseDialog}>
+          <IconButton onClick={handleCloseDialog} sx={{ mr: '1rem' }}>
             <CloseIcon />
           </IconButton>
         </DialogHeader>

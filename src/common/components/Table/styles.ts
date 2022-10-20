@@ -8,11 +8,14 @@ export { default as CircularProgress } from '@mui/material/CircularProgress';
 
 export const Container = styled(MUIPaper)`
   width: 100%;
+  display: flex;
+  flex: 1;
+  flex-direction: column;
   overflow: hidden;
 `;
 
-export const TableContainer = styled(MUITableContainer)<{ height?: string }>`
-  height: ${({ height }) => height || 'calc(100vh - 12rem)'};
+export const TableContainer = styled(MUITableContainer)`
+  flex: 1;
   position: relative;
 `;
 

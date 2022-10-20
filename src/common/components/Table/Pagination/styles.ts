@@ -6,6 +6,7 @@ export { GoToTopButton } from '@/common/components/GoToTopButton';
 
 export const Container = styled(MUIGrid)`
   display: flex;
+  align-items: center;
 `;
 
 export const PaginationComponent = styled(MUITablePagination).attrs({

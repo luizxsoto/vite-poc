@@ -50,7 +50,6 @@ type TableProps<RegisterKey extends string> = {
   actionFunctions?: ActionFunction[];
   validations?: Record<string, string>;
   loading?: boolean;
-  height?: string;
 };
 
 export function Table<RegisterKey extends string>({
@@ -65,7 +64,6 @@ export function Table<RegisterKey extends string>({
   actionFunctions,
   validations,
   loading,
-  height,
 }: TableProps<RegisterKey>): JSX.Element {
   const [page, setPage] = useState(0);
   const [rowsPerPage, setRowsPerPage] = useState(50);
@@ -145,7 +143,7 @@ export function Table<RegisterKey extends string>({
         validations={validations}
         loading={loading}
       />
-      <TableContainer height={height} id="table-container">
+      <TableContainer id="table-container">
         {loading && (
           <CircularProgressContainer>
             <CircularProgress />
