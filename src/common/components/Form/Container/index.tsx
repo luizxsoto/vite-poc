@@ -1,7 +1,7 @@
 import { useEffect } from 'react';
 import { FormHandles, SubmitHandler } from '@unform/core';
 import { SchemaOf } from 'yup';
-import { toast } from 'react-toastify';
+import { useSnackbar } from 'notistack';
 
 import { i18n } from '@/common/i18n';
 import { clearFormErrors, debounceEvent } from '@/common/helpers';
@@ -27,6 +27,8 @@ export function FormContainer<Model>({
   initialData,
   ...rest
 }: FormContainerProps<Model>): JSX.Element {
+  const { enqueueSnackbar } = useSnackbar();
+
   async function handleSubmit(formData: Model): Promise<void> {
     const { parsedData, errorMessages } = await validateYupSchema<Model>({
       formData,
@@ -35,8 +37,8 @@ export function FormContainer<Model>({
     });
 
     if (errorMessages) {
-      toast.warn(i18n().common.exceptions.validationException, {
-        toastId: 'ValidationException',
+      enqueueSnackbar(i18n().common.exceptions.validationException, {
+        variant: 'warning',
       });
 
       formRef.current?.setErrors(errorMessages);

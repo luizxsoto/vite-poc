@@ -1,11 +1,7 @@
 import { createContext, useContext, useState, useCallback } from 'react';
-import { toast } from 'react-toastify';
+import { useSnackbar } from 'notistack';
 
-import {
-  ApplicationException,
-  UnprocessableEntityException,
-  ValidationException,
-} from '@/common/exceptions';
+import { ApplicationException, ValidationException } from '@/common/exceptions';
 import { i18n } from '@/common/i18n';
 
 type ErrorHandlerStateProps = {};
@@ -27,6 +23,8 @@ export function ErrorHandlerProvider({
 }: {
   children: React.ReactNode;
 }) {
+  const { enqueueSnackbar } = useSnackbar();
+
   const [state, setState] = useState<ErrorHandlerStateProps>(INITIAL_STATE);
 
   const errorHandler = useCallback(
@@ -43,19 +41,19 @@ export function ErrorHandlerProvider({
             ) as Record<string, string>
           );
 
-          toast.warn(i18n().common.exceptions.validationException, {
-            toastId: 'ValidationException',
+          enqueueSnackbar(i18n().common.exceptions.validationException, {
+            variant: 'warning',
           });
           break;
         case 'UnprocessableEntityException':
         case 'ApplicationException':
-          toast.warn((error as ApplicationException).message, {
-            toastId: (error as ApplicationException).name,
+          enqueueSnackbar((error as ApplicationException).message, {
+            variant: 'warning',
           });
           break;
         default:
-          toast.warn(i18n().common.exceptions.applicationException, {
-            toastId: 'ApplicationException',
+          enqueueSnackbar(i18n().common.exceptions.applicationException, {
+            variant: 'warning',
           });
           break;
       }

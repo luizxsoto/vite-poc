@@ -1,3 +1,4 @@
+import { useSnackbar } from 'notistack';
 import { i18n } from '@/common/i18n';
 import { changePageTitle } from '@/common/helpers';
 
@@ -20,6 +21,12 @@ import {
 export function Login(): JSX.Element {
   changePageTitle(i18n().modules.auth.pages.login.title);
 
+  const { enqueueSnackbar } = useSnackbar();
+
+  function handleSnack() {
+    enqueueSnackbar('Não implementado', { variant: 'warning' });
+  }
+
   return (
     <Container>
       <ImageContent />
@@ -36,7 +43,7 @@ export function Login(): JSX.Element {
 
           <LoginForm />
 
-          <Button onClick={() => console.log('onClick')}>
+          <Button onClick={handleSnack}>
             {i18n().modules.auth.pages.login.forgotPasswordButton}
           </Button>
 
