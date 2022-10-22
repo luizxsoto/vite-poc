@@ -39,8 +39,6 @@ export function UsersList(): JSX.Element {
   const [pageLoaded, setPageLoaded] = useState(false);
 
   const { userList, listLoading, list } = useUser();
-  // TODO: Use correct validations, using onError, like user Form
-  const validations = {};
 
   function onSubmitSearch({ filterBy, data }: FilterParams): void {
     if (filterBy && data) {
@@ -108,7 +106,6 @@ export function UsersList(): JSX.Element {
         onSubmitSearch={onSubmitSearch}
         filterByOptions={filterByOptions}
         actionFunctions={actionFunctions}
-        validations={validations}
         loading={listLoading}
       />
     </Container>

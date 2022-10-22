@@ -1,22 +1,25 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 
 import { loginApplicationService } from '@/modules/auth/application-services';
-import { LoginParams } from '@/modules/auth/contracts/application-services';
+import {
+  LoginParams,
+  LoginResult,
+} from '@/modules/auth/contracts/application-services';
 import { User } from '@/modules/auth/contracts/models';
 import { useErrorHandler } from '@/common/contexts/error-handler';
+import { ContextHandlers } from '@/common/contracts';
 
 type AuthStateProps = {
   loginLoading: boolean;
-  validations?: Record<string, string>;
   loggedUser?: User;
 };
+type LoginParamsContext = { model: LoginParams } & ContextHandlers<LoginResult>;
 type AuthContextProps = AuthStateProps & {
-  login: (params: LoginParams) => Promise<void>;
+  login: (params: LoginParamsContext) => Promise<void>;
 };
 
 const INITIAL_STATE: AuthStateProps = {
   loginLoading: false,
-  validations: undefined,
   loggedUser: undefined,
 };
 const AuthContext = createContext<AuthContextProps>(
@@ -42,18 +45,19 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   );
 
   const login = useCallback(
-    async (params: LoginParams) => {
+    async ({ model, onSuccess, onError }: LoginParamsContext) => {
       try {
         setStateSafety({ loginLoading: true });
 
-        const serviceResult = await loginApplicationService(params);
+        const serviceResult = await loginApplicationService(model);
 
         setStateSafety({ loggedUser: serviceResult, loginLoading: false });
+        onSuccess?.(serviceResult);
       } catch (error) {
         setStateSafety({ loginLoading: false });
         errorHandler({
           error: error as Error,
-          setValidations: validations => setStateSafety({ validations }),
+          setValidations: validations => onError?.({ validations }),
         });
       }
     },

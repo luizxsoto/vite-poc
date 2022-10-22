@@ -10,19 +10,19 @@ import {
 } from '@/modules/auth/contracts/application-services';
 import { User } from '@/modules/auth/contracts/models';
 import { useErrorHandler } from '@/common/contexts/error-handler';
+import { ContextHandlers } from '@/common/contracts';
 
 type UserStateProps = {
   formLoading: boolean;
   listLoading: boolean;
   userList: User[];
 };
-type ContextHandlers = {
-  onSuccess: (serviceResult: User) => void;
-  onError: (error: { validations?: Record<string, string> }) => void;
-};
+type UserCreateParamsContext = {
+  model: UserCreateParams;
+} & ContextHandlers<User>;
 type UserContextProps = UserStateProps & {
   list: (params: UserListParams) => Promise<void>;
-  create: (params: UserCreateParams & ContextHandlers) => Promise<void>;
+  create: (params: UserCreateParamsContext) => Promise<void>;
   clearState: () => void;
 };
 
@@ -70,27 +70,22 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   );
 
   const create = useCallback(
-    async ({
-      onSuccess,
-      onError,
-      ...params
-    }: UserCreateParams & ContextHandlers) => {
+    async ({ model, onSuccess, onError }: UserCreateParamsContext) => {
       try {
         setStateSafety({ formLoading: true });
 
-        const serviceResult = await userCreateApplicationService(params);
+        const serviceResult = await userCreateApplicationService(model);
 
         setStateSafety(oldState => ({
           formLoading: false,
           userList: [serviceResult, ...oldState.userList],
         }));
-
-        onSuccess(serviceResult);
+        onSuccess?.(serviceResult);
       } catch (error) {
         setStateSafety({ formLoading: false });
         errorHandler({
           error: error as Error,
-          setValidations: validations => onError({ validations }),
+          setValidations: validations => onError?.({ validations }),
         });
       }
     },

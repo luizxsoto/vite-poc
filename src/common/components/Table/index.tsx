@@ -48,7 +48,6 @@ type TableProps<ModelKey extends string> = {
   filterByOptions: FilterByOption[];
   addFunction?: () => void;
   actionFunctions?: ActionFunction[];
-  validations?: Record<string, string>;
   loading?: boolean;
 };
 
@@ -62,7 +61,6 @@ export function Table<ModelKey extends string>({
   filterByOptions,
   addFunction,
   actionFunctions,
-  validations,
   loading,
 }: TableProps<ModelKey>): JSX.Element {
   const [page, setPage] = useState(0);
@@ -140,7 +138,6 @@ export function Table<ModelKey extends string>({
         addFunction={addFunction}
         onSubmitSearch={handleSubmitSearch}
         filterByOptions={filterByOptions}
-        validations={validations}
         loading={loading}
       />
       <TableContainer id="table-container">

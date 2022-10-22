@@ -67,7 +67,6 @@ type HeaderProps = {
   addFunction?: () => void;
   onSubmitSearch: (params: FilterByParams) => void;
   filterByOptions: FilterByOption[];
-  validations?: Record<string, string>;
   loading?: boolean;
 };
 
@@ -77,7 +76,6 @@ export function Header({
   addFunction,
   onSubmitSearch,
   filterByOptions,
-  validations,
   loading,
 }: HeaderProps): JSX.Element {
   const [selectedOption, setSelectedOption] = useState<FilterByOption | null>(
@@ -88,6 +86,7 @@ export function Header({
     setSelectedOption(newValue);
 
     formRef.current?.setFieldValue('data', '');
+    formRef.current?.setFieldError('data', '');
   }
 
   const SearchInput = useCallback(() => {
@@ -120,10 +119,6 @@ export function Header({
       !selectedOption ? defaultInput : inputDict[selectedOption.format]
     )();
   }, [selectedOption]);
-
-  useEffect(() => {
-    formRef.current?.setErrors(validations || {});
-  }, [formRef, validations]);
 
   return (
     <Container>

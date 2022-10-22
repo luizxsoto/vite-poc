@@ -35,12 +35,11 @@ export function UsersFormContent(): JSX.Element {
     navigate(-1);
   }
 
-  function handleSubmit(params: UserCreateParams): void {
+  function handleSubmit(model: UserCreateParams): void {
     create({
-      ...params,
+      model,
       onSuccess: handleCancel,
       onError: error => {
-        console.log({ error });
         formRef.current?.setErrors(error.validations || {});
       },
     });

@@ -37,6 +37,6 @@ export class ApplicationException extends Error {
         : {}
     );
 
-    if (envConfig.NODE_ENV !== 'production') console.log(this);
+    if (envConfig.NODE_ENV !== 'production') console.warn(this);
   }
 }

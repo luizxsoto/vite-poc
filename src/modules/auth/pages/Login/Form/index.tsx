@@ -18,7 +18,7 @@ import {
 import { i18n } from '@/common/i18n';
 
 export function LoginForm(): JSX.Element {
-  const { login, loginLoading, validations } = useAuth();
+  const { login, loginLoading } = useAuth();
 
   const formRef = useRef<FormHandles>(null);
 
@@ -28,13 +28,14 @@ export function LoginForm(): JSX.Element {
     setShowPassword(!showPassword);
   }
 
-  function handleSubmit(params: LoginParams): void {
-    login(params);
+  function handleSubmit(model: LoginParams): void {
+    login({
+      model,
+      onError: error => {
+        formRef.current?.setErrors(error.validations || {});
+      },
+    });
   }
-
-  useEffect(() => {
-    formRef.current?.setErrors(validations || {});
-  }, [validations]);
 
   return (
     <FormContainer<LoginParams>
