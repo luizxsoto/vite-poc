@@ -60,7 +60,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
         const serviceResult = await userListApplicationService(params);
 
-        setStateSafety({ listLoading: false, userList: serviceResult });
+        setStateSafety({ listLoading: false, userList: serviceResult.data });
       } catch (error) {
         setStateSafety({ listLoading: false });
         errorHandler({ error: error as Error });
