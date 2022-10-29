@@ -1,4 +1,4 @@
-import { ReactNode, useState, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { FormHandles } from '@unform/core';
 4;
 import { debounceEvent } from '@/common/helpers/debounce';
@@ -24,7 +24,7 @@ export type ColumnInfo = {
 
 export type ActionFunction = {
   key: string;
-  label: string | ReactNode;
+  label: string | React.ReactNode;
   handle: (model: Record<string, unknown>) => void;
   confirmMessage?: string;
 };
