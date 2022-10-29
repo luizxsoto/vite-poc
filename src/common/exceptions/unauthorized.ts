@@ -7,7 +7,7 @@ export class UnauthorizedException extends ApplicationException {
   constructor() {
     super({
       name: 'UnauthorizedException',
-      code: StatusCodes.UNAUTHORIZED,
+      statusCode: StatusCodes.UNAUTHORIZED,
       message: i18n().common.exceptions.unauthorizedException,
     });
   }

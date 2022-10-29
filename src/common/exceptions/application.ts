@@ -4,7 +4,7 @@ import { i18n } from '@/common/i18n';
 
 export class ApplicationException extends Error {
   public name = 'ApplicationException';
-  public code = StatusCodes.INTERNAL;
+  public statusCode = StatusCodes.INTERNAL;
   public details?: Record<string, unknown> | string;
   public originalError?: Error;
 

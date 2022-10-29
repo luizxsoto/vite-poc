@@ -11,6 +11,7 @@ import {
 import { User } from '@/modules/auth/contracts/models';
 import { useErrorHandler } from '@/common/contexts/error-handler';
 import { ContextHandlers } from '@/common/contracts';
+import { ApplicationException } from '@/common/exceptions';
 
 type UserStateProps = {
   formLoading: boolean;
@@ -63,7 +64,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         setStateSafety({ listLoading: false, userList: serviceResult.data });
       } catch (error) {
         setStateSafety({ listLoading: false });
-        errorHandler({ error: error as Error });
+        errorHandler({ error: error as ApplicationException });
       }
     },
     [setStateSafety]
@@ -84,7 +85,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
       } catch (error) {
         setStateSafety({ formLoading: false });
         errorHandler({
-          error: error as Error,
+          error: error as ApplicationException,
           setValidations: validations => onError?.({ validations }),
         });
       }

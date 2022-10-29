@@ -6,7 +6,7 @@ export class UnprocessableEntityException extends ApplicationException {
   constructor(message: string) {
     super({
       name: 'UnprocessableEntityException',
-      code: StatusCodes.UNPROCESSABLE_ENTITY,
+      statusCode: StatusCodes.UNPROCESSABLE_ENTITY,
       message,
     });
   }

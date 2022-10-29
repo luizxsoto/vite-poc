@@ -13,7 +13,7 @@ export class ValidationException extends ApplicationException {
   constructor(public readonly validations: ValidationItem[]) {
     super({
       name: 'ValidationException',
-      code: StatusCodes.BAD_REQUEST,
+      statusCode: StatusCodes.BAD_REQUEST,
       message: i18n().common.exceptions.validationException,
     });
   }

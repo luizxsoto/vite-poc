@@ -1,12 +1,16 @@
 import { createContext, useContext, useState, useCallback } from 'react';
 import { useSnackbar } from 'notistack';
 
-import { ApplicationException, ValidationException } from '@/common/exceptions';
+import {
+  ApplicationException,
+  UnauthorizedException,
+  ValidationException,
+} from '@/common/exceptions';
 import { i18n } from '@/common/i18n';
 
 type ErrorHandlerStateProps = {};
 type ErrorHandlerProps = {
-  error: Error;
+  error: ApplicationException;
   setValidations?: (validations: Record<string, string>) => void;
 };
 type ErrorHandlerContextProps = ErrorHandlerStateProps & {
@@ -29,7 +33,7 @@ export function ErrorHandlerProvider({
 
   const errorHandler = useCallback(
     ({ error, setValidations }: ErrorHandlerProps) => {
-      switch ((error as ValidationException).name || '') {
+      switch (error?.name || '') {
         case 'ValidationException':
           setValidations?.(
             (error as ValidationException).validations.reduce(
@@ -45,8 +49,12 @@ export function ErrorHandlerProvider({
             variant: 'warning',
           });
           break;
+        case 'UnauthorizedException':
+          enqueueSnackbar(i18n().common.exceptions.unauthorizedException, {
+            variant: 'warning',
+          });
+          break;
         case 'UnprocessableEntityException':
-        case 'ApplicationException':
           enqueueSnackbar((error as ApplicationException).message, {
             variant: 'warning',
           });
