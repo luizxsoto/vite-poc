@@ -5,4 +5,6 @@ export interface LoginParams {
   password: string;
 }
 
-export type LoginResult = User & { bearerToken: string };
+export type LoginResult = User;
+
+export type InfoResult = User;

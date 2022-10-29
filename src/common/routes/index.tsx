@@ -6,11 +6,11 @@ import { SignedRoutes } from './signed';
 import { NotSignedRoutes } from './not-signed';
 
 export function Routes() {
-  const { loggedUser } = useAuth();
+  const { isSigned } = useAuth();
 
   return (
     <BrowserRouter>
-      {loggedUser ? <SignedRoutes /> : <NotSignedRoutes />}
+      {isSigned ? <SignedRoutes /> : <NotSignedRoutes />}
     </BrowserRouter>
   );
 }
