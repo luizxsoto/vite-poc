@@ -1,3 +1,10 @@
+const formIputs = {
+  name: 'Nome',
+  email: 'E-mail',
+  password: 'Senha',
+  role: 'Papel/Cargo',
+};
+
 export const authPt = {
   pages: {
     login: {
@@ -18,17 +25,15 @@ export const authPt = {
       form: {
         title: 'Usuários',
         content: {
-          inputs: {
-            email: 'Informe seu email',
-            password: 'Informe seu senha',
-          },
+          inputs: formIputs,
         },
       },
       list: {
         title: 'Usuários',
         tableColumn: {
           id: 'Código',
-          email: 'E-mail',
+          createdAt: 'Criado em',
+          ...formIputs,
         },
         action: {
           show: 'Detalhes',

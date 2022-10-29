@@ -18,6 +18,7 @@ export const commonPt = {
   },
   exceptions: {
     applicationException: 'Ocorreu um erro inesperado',
+    unauthorizedException: 'Credenciais inválidas',
     validationException: 'Ocorreu um erro de validação',
   },
   pages: {
@@ -26,6 +27,8 @@ export const commonPt = {
     },
   },
   validators: {
+    oneOf: (values: (string | number)[]) =>
+      `Selecione algum dos valores: ${values.join(', ')}`,
     max: (value: number) =>
       `Este campo deve conter no máximo ${value} caracteres`,
     min: (value: number) =>

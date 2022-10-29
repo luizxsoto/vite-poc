@@ -18,15 +18,39 @@ import { useNavigate } from 'react-router-dom';
 const columnInfos: ColumnInfo[] = [
   { key: 'id', label: i18n().modules.auth.pages.users.list.tableColumn.id },
   {
+    key: 'name',
+    label: i18n().modules.auth.pages.users.list.tableColumn.name,
+  },
+  {
     key: 'email',
     label: i18n().modules.auth.pages.users.list.tableColumn.email,
+  },
+  {
+    key: 'role',
+    label: i18n().modules.auth.pages.users.list.tableColumn.role,
+  },
+  {
+    key: 'createdAt',
+    label: i18n().modules.auth.pages.users.list.tableColumn.createdAt,
   },
 ];
 
 const filterByOptions: FilterByOption[] = [
   {
+    key: 'name',
+    label: i18n().modules.auth.pages.users.list.tableColumn.name,
+    type: 'normal',
+    format: 'string',
+  },
+  {
     key: 'email',
     label: i18n().modules.auth.pages.users.list.tableColumn.email,
+    type: 'normal',
+    format: 'string',
+  },
+  {
+    key: 'role',
+    label: i18n().modules.auth.pages.users.list.tableColumn.role,
     type: 'normal',
     format: 'string',
   },

@@ -55,10 +55,17 @@ export function UsersFormContent(): JSX.Element {
       <FormGridContainer>
         <FormGridContainer gap={1}>
           <FormTextInput
+            label={i18n().modules.auth.pages.users.form.content.inputs.name}
+            name="name"
+            disabled={formLoading}
+          />
+          <FormTextInput
             label={i18n().modules.auth.pages.users.form.content.inputs.email}
             name="email"
             disabled={formLoading}
           />
+        </FormGridContainer>
+        <FormGridContainer gap={1}>
           <FormTextInput
             label={i18n().modules.auth.pages.users.form.content.inputs.password}
             name="password"
@@ -69,6 +76,11 @@ export function UsersFormContent(): JSX.Element {
                 {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
               </IconButton>
             }
+          />
+          <FormTextInput
+            label={i18n().modules.auth.pages.users.form.content.inputs.role}
+            name="role"
+            disabled={formLoading}
           />
         </FormGridContainer>
 
