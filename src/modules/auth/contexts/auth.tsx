@@ -19,6 +19,8 @@ import { User } from '@/modules/auth/contracts/models';
 import { getToken } from '@/modules/auth/repositories';
 import { useErrorHandler } from '@/common/contexts/error-handler';
 import { ContextHandlers } from '@/common/contracts';
+import { ApplicationException } from '@/common/exceptions';
+import { consumeQueue, setIsRefreshing } from '@/common/services';
 
 type AuthStateProps = {
   loginLoading: boolean;
@@ -44,9 +46,9 @@ const AuthContext = createContext<AuthContextProps>(
 export function AuthProvider({ children }: { children: React.ReactNode }) {
   const { errorHandler } = useErrorHandler();
   const [state, setState] = useState<AuthStateProps>(() => {
-    const token = getToken();
-
-    return { ...INITIAL_STATE, isSigned: Boolean(token) };
+    const isSigned = Boolean(getToken());
+    if (isSigned) setIsRefreshing(true);
+    return { ...INITIAL_STATE, isSigned };
   });
 
   const setStateSafety = useCallback(
@@ -79,7 +81,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       } catch (error) {
         setStateSafety({ loginLoading: false });
         errorHandler({
-          error: error as Error,
+          error: error as ApplicationException,
           setValidations: validations => onError?.({ validations }),
         });
       }
@@ -92,11 +94,13 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
       setStateSafety({ loginLoading: true });
 
       const serviceResult = await infoAuthApplicationService();
+      consumeQueue();
 
       setStateSafety({ loggedUser: serviceResult, loginLoading: false });
     } catch (error) {
       signOut();
-      errorHandler({ error: error as Error });
+      consumeQueue(true);
+      errorHandler({ error: error as ApplicationException });
     }
   }, [setStateSafety]);
 
@@ -111,7 +115,7 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
   }, [setStateSafety]);
 
   useEffect(() => {
-    info();
+    if (state.isSigned) info();
   }, [info]);
 
   return (

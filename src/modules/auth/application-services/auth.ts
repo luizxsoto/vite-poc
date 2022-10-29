@@ -1,5 +1,9 @@
-import { apiCall, setClientToken, removeClientToken } from '@/common/config';
 import { UnauthorizedException } from '@/common/exceptions';
+import {
+  apiService,
+  removeClientToken,
+  setClientToken,
+} from '@/common/services';
 import {
   InfoResult,
   LoginParams,
@@ -8,7 +12,7 @@ import {
 import { getToken, saveToken, removeToken } from '@/modules/auth/repositories';
 
 export async function loginAuthApplicationService(params: LoginParams) {
-  const { bearerToken, ...result } = await apiCall<
+  const { bearerToken, ...result } = await apiService<
     LoginParams,
     LoginResult & { bearerToken: string }
   >({
@@ -31,9 +35,10 @@ export async function infoAuthApplicationService() {
 
   setClientToken(token);
 
-  return apiCall<{}, InfoResult>({
+  return apiService<{}, InfoResult>({
     method: 'get',
     url: '/sessions',
+    ignoreRefreshing: true,
   });
 }
 

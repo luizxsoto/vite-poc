@@ -18,7 +18,7 @@ export const commonPt = {
   },
   exceptions: {
     applicationException: 'Ocorreu um erro inesperado',
-    unauthorizedException: 'Credenciais inválidas',
+    unauthorizedException: 'Sessão expirada',
     validationException: 'Ocorreu um erro de validação',
   },
   pages: {

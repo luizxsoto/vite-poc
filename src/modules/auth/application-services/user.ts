@@ -1,4 +1,4 @@
-import { apiCall } from '@/common/config';
+import { apiService } from '@/common/services';
 import {
   UserCreateParams,
   UserCreateResult,
@@ -7,7 +7,7 @@ import {
 } from '@/modules/auth/contracts/application-services';
 
 export async function userListApplicationService(params: UserListParams) {
-  return apiCall<UserListParams, UserListResult>({
+  return apiService<UserListParams, UserListResult>({
     method: 'get',
     url: '/users',
     params: params,
@@ -15,7 +15,7 @@ export async function userListApplicationService(params: UserListParams) {
 }
 
 export async function userCreateApplicationService(params: UserCreateParams) {
-  return apiCall<UserCreateParams, UserCreateResult>({
+  return apiService<UserCreateParams, UserCreateResult>({
     method: 'post',
     url: '/users',
     body: params,
