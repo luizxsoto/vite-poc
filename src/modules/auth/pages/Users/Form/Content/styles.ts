@@ -8,6 +8,7 @@ export {
   FormContainer,
   FormGridContainer,
   FormTextInput,
+  FormSelector,
   FormCancelButton,
   FormConfirmButton,
 } from '@/common/components/Form';

@@ -8,6 +8,7 @@ import {
   FormContainer,
   FormGridContainer,
   FormTextInput,
+  FormSelector,
   IconButton,
   VisibilityIcon,
   VisibilityOffIcon,
@@ -77,9 +78,15 @@ export function UsersFormContent(): JSX.Element {
               </IconButton>
             }
           />
-          <FormTextInput
-            label={i18n().modules.auth.pages.users.form.content.inputs.role}
+          <FormSelector
             name="role"
+            label={i18n().modules.auth.pages.users.form.content.inputs.role}
+            idColumn="id"
+            nameColumn="name"
+            options={[
+              { id: 'admin', name: 'Administrador' },
+              { id: 'normal', name: 'Normal' },
+            ]}
             disabled={formLoading}
           />
         </FormGridContainer>
