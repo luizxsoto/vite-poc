@@ -111,7 +111,5 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useUser(): UserContextProps {
-  const context = useContext(UserContext);
-
-  return context;
+  return useContext(UserContext);
 }

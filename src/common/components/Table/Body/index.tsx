@@ -111,9 +111,7 @@ export function Body<ModelKey extends string>({
     itemData: Record<string, unknown>,
     columnInfoKey: string
   ) {
-    const getColumnInfoResult = _Get(itemData, columnInfoKey) as string;
-
-    return getColumnInfoResult;
+    return _Get(itemData, columnInfoKey) as string;
   }
 
   return (

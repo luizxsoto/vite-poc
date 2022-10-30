@@ -77,7 +77,5 @@ export function ErrorHandlerProvider({
 }
 
 export function useErrorHandler(): ErrorHandlerContextProps {
-  const context = useContext(ErrorHandlerContext);
-
-  return context;
+  return useContext(ErrorHandlerContext);
 }

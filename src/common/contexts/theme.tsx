@@ -32,7 +32,5 @@ export function ThemeProvider({ children }: { children: React.ReactNode }) {
 }
 
 export function useTheme(): ThemeContextProps {
-  const context = useContext(ThemeContext);
-
-  return context;
+  return useContext(ThemeContext);
 }

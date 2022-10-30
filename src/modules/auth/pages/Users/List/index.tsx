@@ -30,7 +30,7 @@ const columnInfos: ColumnInfo[] = [
     label: i18n().modules.auth.pages.users.list.tableColumn.role,
   },
   {
-    key: 'createdAt',
+    key: 'createdAtFormated',
     label: i18n().modules.auth.pages.users.list.tableColumn.createdAt,
   },
 ];

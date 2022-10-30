@@ -5,19 +5,24 @@ import {
   UserListParams,
   UserListResult,
 } from '@/modules/auth/contracts/application-services';
+import { formatSanitizer } from '../sanitizers';
 
 export async function userListApplicationService(params: UserListParams) {
-  return apiService<UserListParams, UserListResult>({
+  const { data, ...result } = await apiService<UserListParams, UserListResult>({
     method: 'get',
     url: '/users',
     params: params,
   });
+
+  return { ...result, data: formatSanitizer(data) };
 }
 
 export async function userCreateApplicationService(params: UserCreateParams) {
-  return apiService<UserCreateParams, UserCreateResult>({
+  const result = await apiService<UserCreateParams, UserCreateResult>({
     method: 'post',
     url: '/users',
     body: params,
   });
+
+  return formatSanitizer([result])[0];
 }

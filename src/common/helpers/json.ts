@@ -4,9 +4,7 @@ export function safetyJSONParse<TReturn>(
   if (!value) return undefined;
 
   try {
-    const parsedJSON = JSON.parse(value) as TReturn;
-
-    return parsedJSON;
+    return JSON.parse(value) as TReturn;
   } catch {
     return undefined;
   }
