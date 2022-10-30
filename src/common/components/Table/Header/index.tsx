@@ -20,19 +20,19 @@ import {
   FormValueInput,
 } from './styles';
 
-export type FilterByParams = { filterBy?: string; data?: string };
+export type FilterByParams = { filterBy?: string; filterValue?: string };
 
 const validatorSchema = yup.object().shape(
   {
     filterBy: yup
       .string()
       .max(100, i18n().common.validators.max(100))
-      .when('data', {
-        is: (data: string) => data?.length,
+      .when('filterValue', {
+        is: (filterValue: string) => filterValue?.length,
         then: yup.string().required(i18n().common.validators.required),
         otherwise: yup.string(),
       }),
-    data: yup
+    filterValue: yup
       .string()
       .max(100, i18n().common.validators.max(100))
       .when('filterBy', {
@@ -42,15 +42,15 @@ const validatorSchema = yup.object().shape(
       }),
   },
   [
-    ['data', 'filterBy'],
-    ['data', 'filterBy'],
+    ['filterValue', 'filterBy'],
+    ['filterValue', 'filterBy'],
   ]
 );
 
 function sanitizer(params: FilterByParams): FilterByParams {
   return {
     filterBy: params.filterBy,
-    data: params.data,
+    filterValue: params.filterValue,
   };
 }
 
@@ -85,14 +85,14 @@ export function Header({
   function handleChangeOption(newValue: FilterByOption | null): void {
     setSelectedOption(newValue);
 
-    formRef.current?.setFieldValue('data', '');
-    formRef.current?.setFieldError('data', '');
+    formRef.current?.setFieldValue('filterValue', '');
+    formRef.current?.setFieldError('filterValue', '');
   }
 
   const SearchInput = useCallback(() => {
     const defaultProps = {
       label: i18n().common.components.table.header.searchFor,
-      name: 'data',
+      name: 'filterValue',
       gridProps: { xs: 12, sm: 3 } as GridProps<'div', unknown>,
       disabled: !selectedOption,
       helperText: selectedOption
@@ -133,7 +133,9 @@ export function Header({
         validatorSchema={validatorSchema}
         sanitizer={sanitizer}
         onSubmit={onSubmitSearch}
-        initialData={{ data: formRef.current?.getFieldValue('data') }}
+        initialData={{
+          filterValue: formRef.current?.getFieldValue('filterValue'),
+        }}
       >
         <FormGridContainer justifyContent="right" alignItems="center" gap={1}>
           <FormSelector<FilterByOption>

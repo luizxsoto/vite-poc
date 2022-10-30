@@ -64,9 +64,9 @@ export function UsersList(): JSX.Element {
 
   const { userList, listLoading, list } = useUser();
 
-  function onSubmitSearch({ filterBy, data }: FilterParams): void {
-    if (filterBy && data) {
-      list({ [filterBy]: data });
+  function onSubmitSearch({ filterBy, filterValue }: FilterParams): void {
+    if (filterBy && filterValue) {
+      list({ [filterBy]: filterValue });
     } else {
       list({});
     }

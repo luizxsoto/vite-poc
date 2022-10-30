@@ -31,7 +31,7 @@ export type ActionFunction = {
 
 export type FilterParams = {
   filterBy?: string;
-  data?: string;
+  filterValue?: string;
   page: number;
   perPage: number;
   order: SortTypes;
