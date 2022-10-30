@@ -27,9 +27,9 @@ import {
 } from './styles';
 import { i18n } from '@/common/i18n';
 
-type BodyProps<ModelKey extends string> = {
-  modelKey: ModelKey;
-  modelList: (Record<string, unknown> & Record<ModelKey, string>)[];
+type BodyProps = {
+  modelKey: string;
+  modelList: Record<string, unknown>[];
   columnInfos: ColumnInfo[];
   actionFunctions?: ActionFunction[];
 };
@@ -44,12 +44,12 @@ type DialogState = {
   actionFunction?: ActionFunction;
 };
 
-export function Body<ModelKey extends string>({
+export function Body({
   modelKey,
   modelList,
   columnInfos,
   actionFunctions,
-}: BodyProps<ModelKey>): JSX.Element {
+}: BodyProps): JSX.Element {
   const [selectedItem, setSelectedItem] = useState<SelectedItem>({
     ref: undefined,
     model: undefined,
@@ -144,7 +144,7 @@ export function Body<ModelKey extends string>({
       </Dialog>
 
       {modelList.map(itemData => (
-        <TableRow hover key={itemData[modelKey]}>
+        <TableRow hover key={itemData[modelKey] as string}>
           {columnInfos.map(columnInfo => (
             <TableCell key={columnInfo.key}>
               {getColumnInfos(itemData, columnInfo.key)}

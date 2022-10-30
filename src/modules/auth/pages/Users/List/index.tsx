@@ -1,19 +1,19 @@
-import { useEffect, useMemo, useState } from 'react';
+import { useMemo } from 'react';
+import { useNavigate } from 'react-router-dom';
 
 import { changePageTitle } from '@/common/helpers';
 import { i18n } from '@/common/i18n';
 import { useUser } from '@/modules/auth/contexts/user';
+import { FilterByOption } from '@/common/components/Table/Header';
+import { UserListResult } from '@/modules/auth/contracts/application-services';
 
 import {
   ActionFunction,
   ColumnInfo,
   FilterParams,
 } from '@/common/components/Table';
-import { FilterByOption } from '@/common/components/Table/Header';
 
 import { Table, Container } from './styles';
-import { User } from '@/modules/auth/contracts/models';
-import { useNavigate } from 'react-router-dom';
 
 const columnInfos: ColumnInfo[] = [
   { key: 'id', label: i18n().modules.auth.pages.users.list.tableColumn.id },
@@ -60,17 +60,8 @@ export function UsersList(): JSX.Element {
   changePageTitle(i18n().modules.auth.pages.users.list.title);
 
   const navigate = useNavigate();
-  const [pageLoaded, setPageLoaded] = useState(false);
 
-  const { userList, listLoading, list } = useUser();
-
-  function onSubmitSearch({ filterBy, filterValue }: FilterParams): void {
-    if (filterBy && filterValue) {
-      list({ [filterBy]: filterValue });
-    } else {
-      list({});
-    }
-  }
+  const { listData, listLoading, list } = useUser();
 
   function addFunction() {
     navigate('/form');
@@ -110,24 +101,15 @@ export function UsersList(): JSX.Element {
     ];
   }, []);
 
-  useEffect(() => {
-    if (!userList.length && !pageLoaded) {
-      list({});
-    }
-
-    setPageLoaded(true);
-  }, [userList.length, pageLoaded, list]);
-
   return (
     <Container>
-      <Table
+      <Table<UserListResult>
         title={i18n().modules.auth.pages.users.list.title}
         modelKey="id"
-        modelList={userList as (Record<string, unknown> & User)[]}
-        listTotal={userList.length}
+        listData={listData}
         addFunction={addFunction}
         columnInfos={columnInfos}
-        onSubmitSearch={onSubmitSearch}
+        onSubmitSearch={list}
         filterByOptions={filterByOptions}
         actionFunctions={actionFunctions}
         loading={listLoading}

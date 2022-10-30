@@ -1,4 +1,4 @@
-import { SortTypes } from '@/common/constants';
+import { OrderTypes } from '@/common/constants';
 import { ActionFunction, ColumnInfo } from '@/common/components/Table';
 
 import {
@@ -12,7 +12,7 @@ import { i18n } from '@/common/i18n';
 
 type HeadProps = {
   columnInfos: ColumnInfo[];
-  order: SortTypes;
+  order: OrderTypes;
   orderBy: string;
   onRequestSort: (key: string) => void;
   actionFunctions?: ActionFunction[];

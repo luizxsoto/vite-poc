@@ -10,6 +10,4 @@ export enum StatusCodes {
   INTERNAL = 500,
 }
 
-export type SortTypes = 'desc' | 'asc';
-
-export type SearchTypes = 'normal' | 'relation';
+export type OrderTypes = 'desc' | 'asc';

@@ -7,6 +7,7 @@ import {
 import {
   UserCreateParams,
   UserListParams,
+  UserListResult,
 } from '@/modules/auth/contracts/application-services';
 import { User } from '@/modules/auth/contracts/models';
 import { useErrorHandler } from '@/common/contexts/error-handler';
@@ -16,7 +17,7 @@ import { ApplicationException } from '@/common/exceptions';
 type UserStateProps = {
   formLoading: boolean;
   listLoading: boolean;
-  userList: User[];
+  listData: UserListResult;
 };
 type UserCreateParamsContext = {
   model: UserCreateParams;
@@ -30,7 +31,15 @@ type UserContextProps = UserStateProps & {
 const INITIAL_STATE: UserStateProps = {
   formLoading: false,
   listLoading: false,
-  userList: [],
+  listData: {
+    page: 1,
+    perPage: 25,
+    lastPage: 1,
+    total: 1,
+    order: 'desc',
+    orderBy: 'createdAtFormated',
+    data: [],
+  },
 };
 const UserContext = createContext<UserContextProps>(
   INITIAL_STATE as UserContextProps
@@ -61,7 +70,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
         const serviceResult = await userListApplicationService(params);
 
-        setStateSafety({ listLoading: false, userList: serviceResult.data });
+        setStateSafety({ listLoading: false, listData: serviceResult });
       } catch (error) {
         setStateSafety({ listLoading: false });
         errorHandler({ error: error as ApplicationException });
@@ -79,7 +88,10 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
         setStateSafety(oldState => ({
           formLoading: false,
-          userList: [serviceResult, ...oldState.userList],
+          listData: {
+            ...oldState.listData,
+            data: [serviceResult, ...oldState.listData.data],
+          },
         }));
         onSuccess?.(serviceResult);
       } catch (error) {

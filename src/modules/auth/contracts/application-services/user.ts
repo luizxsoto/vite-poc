@@ -1,24 +1,29 @@
+import { OrderTypes } from '@/common/constants';
+import { ListApplicationServiceResult } from '@/common/contracts';
 import { User } from '@/modules/auth/contracts/models';
+
+export type UserListOrderBy =
+  | 'id'
+  | 'name'
+  | 'email'
+  | 'role'
+  | 'createdAt'
+  | 'createdAtFormated';
 
 export interface UserListParams {
   page?: number;
   perPage?: number;
-  order?: 'asc' | 'desc';
-  orderBy?: 'id' | 'name' | 'email' | 'role';
+  order?: OrderTypes;
+  orderBy?: UserListOrderBy;
   name?: string;
   email?: string;
   role?: string;
 }
 
-export type UserListResult = {
-  page: number;
-  perPage: number;
-  lastPage: number;
-  total: number;
-  order?: 'asc' | 'desc';
-  orderBy?: 'id' | 'name' | 'email' | 'role';
-  data: User[];
-};
+export type UserListResult = ListApplicationServiceResult<
+  User,
+  UserListOrderBy
+>;
 
 export interface UserCreateParams {
   name: string;

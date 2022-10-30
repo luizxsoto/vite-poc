@@ -1,8 +1,8 @@
-import { useState, useRef } from 'react';
+import { useState, useRef, useEffect, useMemo } from 'react';
 import { FormHandles } from '@unform/core';
 4;
 import { debounceEvent } from '@/common/helpers/debounce';
-import { SortTypes } from '@/common/constants';
+import { OrderTypes } from '@/common/constants';
 
 import { Header, FilterByParams, FilterByOption } from './Header';
 import { Head } from './Head';
@@ -16,6 +16,7 @@ import {
   CircularProgressContainer,
   CircularProgress,
 } from './styles';
+import { ListApplicationServiceResult } from '@/common/contracts';
 
 export type ColumnInfo = {
   key: string;
@@ -29,89 +30,105 @@ export type ActionFunction = {
   confirmMessage?: string;
 };
 
-export type FilterParams = {
+export type FilterParams<
+  OrderBy extends ListApplicationServiceResult['orderBy']
+> = {
   filterBy?: string;
   filterValue?: string;
   page: number;
   perPage: number;
-  order: SortTypes;
-  orderBy: string;
+  order: OrderTypes;
+  orderBy: OrderBy;
 };
 
-type TableProps<ModelKey extends string> = {
+type TableProps<ListData extends ListApplicationServiceResult> = {
   title: string;
-  modelKey: ModelKey;
-  modelList: (Record<string, unknown> & Record<ModelKey, string>)[];
-  listTotal: number;
+  modelKey: string;
+  listData: ListData;
   columnInfos: ColumnInfo[];
-  onSubmitSearch: (params: FilterParams) => void;
+  onSubmitSearch: (params: FilterParams<ListData['orderBy']>) => void;
   filterByOptions: FilterByOption[];
   addFunction?: () => void;
   actionFunctions?: ActionFunction[];
   loading?: boolean;
 };
 
-export function Table<ModelKey extends string>({
+export function Table<ListData extends ListApplicationServiceResult>({
   title,
   modelKey,
-  modelList,
-  listTotal,
+  listData,
   columnInfos,
   onSubmitSearch,
   filterByOptions,
   addFunction,
   actionFunctions,
   loading,
-}: TableProps<ModelKey>): JSX.Element {
+}: TableProps<ListData>): JSX.Element {
+  const [pageLoaded, setPageLoaded] = useState(false);
   const [page, setPage] = useState(0);
-  const [rowsPerPage, setRowsPerPage] = useState(50);
-  const [order, setOrder] = useState<SortTypes>('asc');
-  const [orderBy, setOrderBy] = useState('id');
+  const [rowsPerPage, setRowsPerPage] = useState(listData.perPage);
+  const [order, setOrder] = useState<OrderTypes>(listData.order);
+  const [orderBy, setOrderBy] = useState(listData.orderBy);
+  const parsedOrderBy = useMemo(
+    () => orderBy.replace(/Formated$/, ''),
+    [orderBy]
+  );
 
   const formRef = useRef<FormHandles>(null);
 
-  function handleSubmitSearch(formData: FilterByParams) {
+  function handleSubmitSearch({ filterBy, filterValue }: FilterByParams) {
     setPage(0);
 
-    onSubmitSearch({
-      ...formData,
+    const searchData: FilterParams<ListData['orderBy']> &
+      Record<string, unknown> = {
       page: 1,
       perPage: rowsPerPage,
       order,
-      orderBy,
-    });
+      orderBy: parsedOrderBy,
+    };
+
+    if (filterBy && filterValue) searchData[filterBy] = filterValue;
+
+    onSubmitSearch(searchData);
   }
 
   function onPageChange(newPage: number) {
     setPage(newPage);
 
+    const searchData: FilterParams<ListData['orderBy']> &
+      Record<string, unknown> = {
+      page: newPage + 1,
+      perPage: rowsPerPage,
+      order,
+      orderBy: parsedOrderBy,
+    };
     const formData = formRef.current?.getData();
-    debounceEvent(() =>
-      onSubmitSearch({
-        ...formData,
-        page: newPage + 1,
-        perPage: rowsPerPage,
-        order,
-        orderBy,
-      })
-    )();
+    if (formData?.filterBy && formData?.filterValue) {
+      searchData[formData?.filterBy] = formData?.filterValue;
+    }
+
+    debounceEvent(() => onSubmitSearch(searchData))();
   }
 
   function onRowsPerPageChange(newRowsPerPage: number) {
     setRowsPerPage(newRowsPerPage);
     setPage(0);
 
+    const searchData: FilterParams<ListData['orderBy']> &
+      Record<string, unknown> = {
+      page: 1,
+      perPage: newRowsPerPage,
+      order,
+      orderBy: parsedOrderBy,
+    };
     const formData = formRef.current?.getData();
-    debounceEvent(() =>
-      onSubmitSearch({
-        ...formData,
-        page: 1,
-        perPage: newRowsPerPage,
-        order,
-        orderBy,
-      })
-    )();
+    if (formData?.filterBy && formData?.filterValue) {
+      searchData[formData?.filterBy] = formData?.filterValue;
+    }
+
+    debounceEvent(() => onSubmitSearch(searchData))();
   }
+
   function onRequestSort(key: string) {
     const isAsc = orderBy === key && order === 'asc';
     const parsedOrder = isAsc ? 'desc' : 'asc';
@@ -125,10 +142,23 @@ export function Table<ModelKey extends string>({
         page: page + 1,
         perPage: rowsPerPage,
         order: parsedOrder,
-        orderBy: key,
+        orderBy: key.replace(/Formated$/, ''),
       })
     )();
   }
+
+  useEffect(() => {
+    if (!listData.data.length && !pageLoaded) {
+      onSubmitSearch({
+        page: 1,
+        perPage: listData.perPage,
+        order: listData.order,
+        orderBy: parsedOrderBy,
+      });
+    }
+
+    setPageLoaded(true);
+  }, [listData, pageLoaded, onSubmitSearch]);
 
   return (
     <Container>
@@ -156,14 +186,14 @@ export function Table<ModelKey extends string>({
           />
           <Body
             modelKey={modelKey}
-            modelList={modelList}
+            modelList={listData.data}
             columnInfos={columnInfos}
             actionFunctions={actionFunctions}
           />
         </TableWrapper>
       </TableContainer>
       <Pagination
-        count={listTotal}
+        count={listData.total}
         page={page}
         rowsPerPage={rowsPerPage}
         onPageChange={onPageChange}

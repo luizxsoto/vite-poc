@@ -11,4 +11,12 @@ export const Container = styled(MUIGrid)`
 
 export const PaginationComponent = styled(MUITablePagination).attrs({
   component: 'div',
-})``;
+})`
+  & .MuiInputBase-root {
+    margin-right: unset;
+  }
+
+  & .MuiTablePagination-actions {
+    margin-left: unset;
+  }
+`;
