@@ -73,7 +73,7 @@ export function UsersList(): JSX.Element {
         key: 'show',
         label: i18n().modules.auth.pages.users.list.action.show,
         handle: model => {
-          console.log(i18n().modules.auth.pages.users.list.action.show, model);
+          navigate(`/form/${model.id}?method=show`);
         },
       },
       {

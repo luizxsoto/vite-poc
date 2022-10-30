@@ -1,4 +1,4 @@
-import { useRef, useState } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { FormHandles } from '@unform/core';
 
@@ -20,8 +20,14 @@ import { UserCreateParams } from '@/modules/auth/contracts/application-services'
 import { useUser } from '@/modules/auth/contexts/user';
 import { i18n } from '@/common/i18n';
 
-export function UsersFormContent(): JSX.Element {
-  const { create, formLoading } = useUser();
+interface UsersFormContentProps {
+  canEdit?: boolean;
+}
+
+export function UsersFormContent({
+  canEdit,
+}: UsersFormContentProps): JSX.Element {
+  const { create, formLoading, showingData } = useUser();
 
   const navigate = useNavigate();
 
@@ -40,8 +46,8 @@ export function UsersFormContent(): JSX.Element {
     create({
       model,
       onSuccess: handleCancel,
-      onError: error => {
-        formRef.current?.setErrors(error.validations || {});
+      onError: ({ validations }) => {
+        formRef.current?.setErrors(validations || {});
       },
     });
   }
@@ -52,28 +58,35 @@ export function UsersFormContent(): JSX.Element {
       validatorSchema={createValidationSchema}
       sanitizer={createSanitizer}
       onSubmit={handleSubmit}
+      initialData={(showingData || {}) as UserCreateParams}
     >
       <FormGridContainer>
         <FormGridContainer gap={1}>
           <FormTextInput
             label={i18n().modules.auth.pages.users.form.content.inputs.name}
             name="name"
-            disabled={formLoading}
+            disabled={formLoading || !canEdit}
+            loading={formLoading}
           />
           <FormTextInput
             label={i18n().modules.auth.pages.users.form.content.inputs.email}
             name="email"
-            disabled={formLoading}
+            disabled={formLoading || !canEdit}
+            loading={formLoading}
           />
         </FormGridContainer>
         <FormGridContainer gap={1}>
           <FormTextInput
             label={i18n().modules.auth.pages.users.form.content.inputs.password}
             name="password"
-            disabled={formLoading}
+            disabled={formLoading || !canEdit}
+            loading={formLoading}
             inputProps={{ type: showPassword ? 'text' : 'password' }}
             endAdornment={
-              <IconButton onClick={handleTogglePassword} disabled={formLoading}>
+              <IconButton
+                onClick={handleTogglePassword}
+                disabled={formLoading || !canEdit}
+              >
                 {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
               </IconButton>
             }
@@ -83,26 +96,27 @@ export function UsersFormContent(): JSX.Element {
             label={i18n().modules.auth.pages.users.form.content.inputs.role}
             idColumn="id"
             nameColumn="name"
+            disabled={formLoading || !canEdit}
+            loading={formLoading}
             options={[
               { id: 'admin', name: 'Administrador' },
               { id: 'normal', name: 'Normal' },
             ]}
-            disabled={formLoading}
           />
         </FormGridContainer>
 
         <FormGridContainer gap={1}>
           <FormCancelButton
-            loading={formLoading}
             disabled={formLoading}
+            loading={formLoading}
             gridProps={{ xs: 7, sm: 4 }}
             onClick={handleCancel}
           >
             CANCELAR
           </FormCancelButton>
           <FormConfirmButton
+            disabled={formLoading || !canEdit}
             loading={formLoading}
-            disabled={formLoading}
             gridProps={{ xs: 7, sm: 4 }}
           >
             SALVAR

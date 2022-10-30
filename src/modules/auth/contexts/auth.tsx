@@ -80,9 +80,11 @@ export function AuthProvider({ children }: { children: React.ReactNode }) {
         onSuccess?.(serviceResult);
       } catch (error) {
         setStateSafety({ loginLoading: false });
+        const parsedError = error as ApplicationException;
         errorHandler({
-          error: error as ApplicationException,
-          setValidations: validations => onError?.({ validations }),
+          error: parsedError,
+          setValidations: validations =>
+            onError?.({ error: parsedError, validations }),
         });
       }
     },

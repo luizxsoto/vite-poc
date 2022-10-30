@@ -4,6 +4,8 @@ import {
   UserCreateResult,
   UserListParams,
   UserListResult,
+  UserShowParams,
+  UserShowResult,
 } from '@/modules/auth/contracts/application-services';
 import { formatSanitizer } from '../sanitizers';
 
@@ -22,6 +24,15 @@ export async function userCreateApplicationService(params: UserCreateParams) {
     method: 'post',
     url: '/users',
     body: params,
+  });
+
+  return formatSanitizer([result])[0];
+}
+
+export async function userShowApplicationService(params: UserShowParams) {
+  const result = await apiService<UserShowParams, UserShowResult>({
+    method: 'get',
+    url: `/users/${params.id}`,
   });
 
   return formatSanitizer([result])[0];

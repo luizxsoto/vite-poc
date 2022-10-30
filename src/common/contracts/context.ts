@@ -1,4 +1,9 @@
+import { ApplicationException } from '@/common/exceptions';
+
 export type ContextHandlers<ServiceResult> = {
   onSuccess?: (serviceResult: ServiceResult) => void;
-  onError?: (error: { validations?: Record<string, string> }) => void;
+  onError?: (serviceResult: {
+    error: ApplicationException;
+    validations?: Record<string, string>;
+  }) => void;
 };

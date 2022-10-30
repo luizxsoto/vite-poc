@@ -9,6 +9,7 @@ export function UserRoutes() {
     <Routes>
       <Route path="/" element={<UsersList />} />
       <Route path="/form" element={<UsersForm />} />
+      <Route path="/form/:id" element={<UsersForm />} />
 
       <Route path="/not-found" element={<NotFound />} />
       <Route path="*" element={<Navigate replace to="/not-found" />} />

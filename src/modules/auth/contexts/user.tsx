@@ -3,11 +3,13 @@ import { createContext, useContext, useState, useCallback } from 'react';
 import {
   userCreateApplicationService,
   userListApplicationService,
+  userShowApplicationService,
 } from '@/modules/auth/application-services';
 import {
   UserCreateParams,
   UserListParams,
   UserListResult,
+  UserShowParams,
 } from '@/modules/auth/contracts/application-services';
 import { User } from '@/modules/auth/contracts/models';
 import { useErrorHandler } from '@/common/contexts/error-handler';
@@ -18,13 +20,18 @@ type UserStateProps = {
   formLoading: boolean;
   listLoading: boolean;
   listData: UserListResult;
+  showingData?: User;
 };
 type UserCreateParamsContext = {
   model: UserCreateParams;
 } & ContextHandlers<User>;
+type UserShowParamsContext = {
+  model: UserShowParams;
+} & ContextHandlers<User>;
 type UserContextProps = UserStateProps & {
   list: (params: UserListParams) => Promise<void>;
   create: (params: UserCreateParamsContext) => Promise<void>;
+  show: (params: UserShowParamsContext) => Promise<void>;
   clearState: () => void;
 };
 
@@ -40,6 +47,7 @@ const INITIAL_STATE: UserStateProps = {
     orderBy: 'createdAtFormated',
     data: [],
   },
+  showingData: undefined,
 };
 const UserContext = createContext<UserContextProps>(
   INITIAL_STATE as UserContextProps
@@ -96,10 +104,31 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
         onSuccess?.(serviceResult);
       } catch (error) {
         setStateSafety({ formLoading: false });
+        const parsedError = error as ApplicationException;
         errorHandler({
-          error: error as ApplicationException,
-          setValidations: validations => onError?.({ validations }),
+          error: parsedError,
+          setValidations: validations =>
+            onError?.({ error: parsedError, validations }),
         });
+      }
+    },
+    [setStateSafety]
+  );
+
+  const show = useCallback(
+    async ({ model, onSuccess, onError }: UserShowParamsContext) => {
+      try {
+        setStateSafety({ formLoading: true });
+
+        const serviceResult = await userShowApplicationService(model);
+
+        setStateSafety({ formLoading: false, showingData: serviceResult });
+        onSuccess?.(serviceResult);
+      } catch (error) {
+        setStateSafety({ formLoading: false });
+        const parsedError = error as ApplicationException;
+        onError?.({ error: parsedError });
+        errorHandler({ error: parsedError });
       }
     },
     [setStateSafety]
@@ -109,14 +138,12 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     setStateSafety(oldState => ({
       ...oldState,
       formLoading: false,
-      // TODO: Remove comments when implemented
-      // showLoading: false,
-      // registerShow: undefined,
+      showingData: undefined,
     }));
   }, [setState]);
 
   return (
-    <UserContext.Provider value={{ ...state, list, create, clearState }}>
+    <UserContext.Provider value={{ ...state, list, create, show, clearState }}>
       {children}
     </UserContext.Provider>
   );

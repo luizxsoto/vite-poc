@@ -31,8 +31,8 @@ export function LoginForm(): JSX.Element {
   function handleSubmit(model: LoginParams): void {
     login({
       model,
-      onError: error => {
-        formRef.current?.setErrors(error.validations || {});
+      onError: ({ validations }) => {
+        formRef.current?.setErrors(validations || {});
       },
     });
   }
