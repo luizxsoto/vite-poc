@@ -22,7 +22,8 @@ type UserStateProps = {
   formLoading: boolean;
   listLoading: boolean;
   listData: UserListResult;
-  showingData?: User;
+  showData?: User;
+  showLoading: boolean;
 };
 type UserCreateParamsContext = {
   model: UserCreateParams;
@@ -53,7 +54,8 @@ const INITIAL_STATE: UserStateProps = {
     orderBy: 'createdAtFormated',
     data: [],
   },
-  showingData: undefined,
+  showData: undefined,
+  showLoading: false,
 };
 const UserContext = createContext<UserContextProps>(
   INITIAL_STATE as UserContextProps
@@ -124,14 +126,14 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
   const show = useCallback(
     async ({ model, onSuccess, onError }: UserShowParamsContext) => {
       try {
-        setStateSafety({ formLoading: true });
+        setStateSafety({ showLoading: true });
 
         const serviceResult = await userShowApplicationService(model);
 
-        setStateSafety({ formLoading: false, showingData: serviceResult });
+        setStateSafety({ showLoading: false, showData: serviceResult });
         onSuccess?.(serviceResult);
       } catch (error) {
-        setStateSafety({ formLoading: false });
+        setStateSafety({ showLoading: false });
         const parsedError = error as ApplicationException;
         onError?.({ error: parsedError });
         errorHandler({ error: parsedError });
@@ -175,7 +177,8 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     setStateSafety(oldState => ({
       ...oldState,
       formLoading: false,
-      showingData: undefined,
+      showData: undefined,
+      showLoading: false,
     }));
   }, [setState]);
 

@@ -27,7 +27,7 @@ interface UsersFormContentProps {
 export function UsersFormContent({
   canEdit,
 }: UsersFormContentProps): JSX.Element {
-  const { create, update, formLoading, showingData } = useUser();
+  const { create, update, formLoading, showData, showLoading } = useUser();
 
   const navigate = useNavigate();
 
@@ -50,8 +50,8 @@ export function UsersFormContent({
         formRef.current?.setErrors(validations || {});
       },
     };
-    if (canEdit && showingData) {
-      update({ ...params, model: { ...params.model, id: showingData.id } });
+    if (canEdit && showData) {
+      update({ ...params, model: { ...params.model, id: showData.id } });
     } else {
       create(params);
     }
@@ -63,7 +63,7 @@ export function UsersFormContent({
       validatorSchema={createValidationSchema}
       sanitizer={createSanitizer}
       onSubmit={handleSubmit}
-      initialData={(showingData || {}) as UserCreateParams}
+      initialData={showData && { ...showData, password: '' }}
     >
       <FormGridContainer>
         <FormGridContainer gap={1}>
@@ -71,13 +71,13 @@ export function UsersFormContent({
             label={i18n().modules.auth.pages.users.form.content.inputs.name}
             name="name"
             disabled={formLoading || !canEdit}
-            loading={formLoading}
+            loading={showLoading}
           />
           <FormTextInput
             label={i18n().modules.auth.pages.users.form.content.inputs.email}
             name="email"
             disabled={formLoading || !canEdit}
-            loading={formLoading}
+            loading={showLoading}
           />
         </FormGridContainer>
         <FormGridContainer gap={1}>
@@ -85,7 +85,7 @@ export function UsersFormContent({
             label={i18n().modules.auth.pages.users.form.content.inputs.password}
             name="password"
             disabled={formLoading || !canEdit}
-            loading={formLoading}
+            loading={showLoading}
             inputProps={{ type: showPassword ? 'text' : 'password' }}
             endAdornment={
               <IconButton
@@ -102,7 +102,7 @@ export function UsersFormContent({
             idColumn="id"
             nameColumn="name"
             disabled={formLoading || !canEdit}
-            loading={formLoading}
+            loading={showLoading}
             options={[
               { id: 'admin', name: 'Administrador' },
               { id: 'normal', name: 'Normal' },
@@ -112,8 +112,7 @@ export function UsersFormContent({
 
         <FormGridContainer gap={1}>
           <FormCancelButton
-            disabled={formLoading}
-            loading={formLoading}
+            loading={showLoading || formLoading}
             gridProps={{ xs: 7, sm: 4 }}
             onClick={handleCancel}
           >
@@ -121,7 +120,7 @@ export function UsersFormContent({
           </FormCancelButton>
           <FormConfirmButton
             disabled={formLoading || !canEdit}
-            loading={formLoading}
+            loading={showLoading || formLoading}
             gridProps={{ xs: 7, sm: 4 }}
           >
             SALVAR
