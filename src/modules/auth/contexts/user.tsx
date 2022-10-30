@@ -3,6 +3,7 @@ import { createContext, useContext, useState, useCallback } from 'react';
 import {
   userCreateApplicationService,
   userListApplicationService,
+  userRemoveApplicationService,
   userShowApplicationService,
   userUpdateApplicationService,
 } from '@/modules/auth/application-services';
@@ -10,6 +11,7 @@ import {
   UserCreateParams,
   UserListParams,
   UserListResult,
+  UserRemoveParams,
   UserShowParams,
   UserUpdateParams,
 } from '@/modules/auth/contracts/application-services';
@@ -34,11 +36,15 @@ type UserShowParamsContext = {
 type UserUpdateParamsContext = {
   model: UserUpdateParams;
 } & ContextHandlers<User>;
+type UserRemoveParamsContext = {
+  model: UserRemoveParams;
+} & ContextHandlers<User>;
 type UserContextProps = UserStateProps & {
   list: (params: UserListParams) => Promise<void>;
   create: (params: UserCreateParamsContext) => Promise<void>;
   show: (params: UserShowParamsContext) => Promise<void>;
   update: (params: UserUpdateParamsContext) => Promise<void>;
+  remove: (params: UserRemoveParamsContext) => Promise<void>;
   clearState: () => void;
 };
 
@@ -173,6 +179,31 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
     [setStateSafety]
   );
 
+  const remove = useCallback(
+    async ({ model, onSuccess, onError }: UserRemoveParamsContext) => {
+      try {
+        setStateSafety({ listLoading: true });
+
+        const serviceResult = await userRemoveApplicationService(model);
+
+        setStateSafety(oldState => ({
+          listLoading: false,
+          listData: {
+            ...oldState.listData,
+            data: oldState.listData.data.filter(item => item.id !== model.id),
+          },
+        }));
+        onSuccess?.(serviceResult);
+      } catch (error) {
+        setStateSafety({ listLoading: false });
+        const parsedError = error as ApplicationException;
+        onError?.({ error: parsedError });
+        errorHandler({ error: parsedError });
+      }
+    },
+    [setStateSafety]
+  );
+
   const clearState = useCallback((): void => {
     setStateSafety(oldState => ({
       ...oldState,
@@ -184,7 +215,7 @@ export function UserProvider({ children }: { children: React.ReactNode }) {
 
   return (
     <UserContext.Provider
-      value={{ ...state, list, create, show, update, clearState }}
+      value={{ ...state, list, create, show, update, remove, clearState }}
     >
       {children}
     </UserContext.Provider>

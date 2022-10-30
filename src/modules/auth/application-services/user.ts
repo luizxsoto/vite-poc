@@ -4,6 +4,8 @@ import {
   UserCreateResult,
   UserListParams,
   UserListResult,
+  UserRemoveParams,
+  UserRemoveResult,
   UserShowParams,
   UserShowResult,
   UserUpdateParams,
@@ -51,6 +53,18 @@ export async function userUpdateApplicationService({
     method: 'patch',
     url: `/users/${id}`,
     body: params,
+  });
+
+  return formatSanitizer([result])[0];
+}
+
+export async function userRemoveApplicationService({ id }: UserRemoveParams) {
+  const result = await apiService<
+    Omit<UserRemoveParams, 'id'>,
+    UserRemoveResult
+  >({
+    method: 'delete',
+    url: `/users/${id}`,
   });
 
   return formatSanitizer([result])[0];

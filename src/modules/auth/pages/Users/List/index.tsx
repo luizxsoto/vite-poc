@@ -61,7 +61,7 @@ export function UsersList(): JSX.Element {
 
   const navigate = useNavigate();
 
-  const { listData, listLoading, list } = useUser();
+  const { listData, listLoading, list, remove } = useUser();
 
   function addFunction() {
     navigate('/form');
@@ -87,10 +87,7 @@ export function UsersList(): JSX.Element {
         key: 'remove',
         label: i18n().modules.auth.pages.users.list.action.remove,
         handle: model => {
-          console.log(
-            i18n().modules.auth.pages.users.list.action.remove,
-            model
-          );
+          remove({ model: { id: model.id as string } });
         },
         confirmMessage:
           i18n().modules.auth.pages.users.list.action.confirmRemove,
