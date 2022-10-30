@@ -27,7 +27,7 @@ interface UsersFormContentProps {
 export function UsersFormContent({
   canEdit,
 }: UsersFormContentProps): JSX.Element {
-  const { create, formLoading, showingData } = useUser();
+  const { create, update, formLoading, showingData } = useUser();
 
   const navigate = useNavigate();
 
@@ -43,13 +43,18 @@ export function UsersFormContent({
   }
 
   function handleSubmit(model: UserCreateParams): void {
-    create({
+    const params = {
       model,
       onSuccess: handleCancel,
-      onError: ({ validations }) => {
+      onError: ({ validations }: { validations?: Record<string, string> }) => {
         formRef.current?.setErrors(validations || {});
       },
-    });
+    };
+    if (canEdit && showingData) {
+      update({ ...params, model: { ...params.model, id: showingData.id } });
+    } else {
+      create(params);
+    }
   }
 
   return (

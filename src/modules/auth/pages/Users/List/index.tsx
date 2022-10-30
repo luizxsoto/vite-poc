@@ -80,10 +80,7 @@ export function UsersList(): JSX.Element {
         key: 'update',
         label: i18n().modules.auth.pages.users.list.action.update,
         handle: model => {
-          console.log(
-            i18n().modules.auth.pages.users.list.action.update,
-            model
-          );
+          navigate(`/form/${model.id}?method=update`);
         },
       },
       {

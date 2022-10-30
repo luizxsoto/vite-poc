@@ -39,3 +39,9 @@ export interface UserShowParams {
 }
 
 export type UserShowResult = User;
+
+export interface UserUpdateParams extends UserCreateParams {
+  id: string;
+}
+
+export type UserUpdateResult = User;

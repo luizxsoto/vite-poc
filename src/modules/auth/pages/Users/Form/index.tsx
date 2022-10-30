@@ -19,7 +19,7 @@ export function UsersForm(): JSX.Element {
 
   const canEdit = useMemo<boolean>(() => {
     const method = new URLSearchParams(location.search).get('method');
-    return method === 'edit' || !method;
+    return method === 'update' || !method;
   }, [location]);
 
   useEffect(() => {
