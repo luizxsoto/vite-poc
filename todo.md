@@ -1,0 +1,2 @@
+- [ ] Validar se o setFormData será utilizado. Caso não seja, será possível remove-lo e também remover os handleChange dos inputs. Assim o form ficará totalmente uncrontrolled.
+- [ ] yup validator está sanitizando, mas quem deve sanitizar é quem chama o yup, ou seja, yup com mais responsabilidades do que deveria
