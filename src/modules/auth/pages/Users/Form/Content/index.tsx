@@ -72,12 +72,14 @@ export function UsersFormContent({
             name="name"
             disabled={formLoading || !canEdit}
             loading={showLoading}
+            required
           />
           <FormTextInput
             label={i18n().modules.auth.pages.users.form.content.inputs.email}
             name="email"
             disabled={formLoading || !canEdit}
             loading={showLoading}
+            required
           />
         </FormGridContainer>
         <FormGridContainer gap={1}>
@@ -95,6 +97,7 @@ export function UsersFormContent({
                 {showPassword ? <VisibilityIcon /> : <VisibilityOffIcon />}
               </IconButton>
             }
+            required
           />
           <FormSelector
             name="role"
@@ -107,6 +110,7 @@ export function UsersFormContent({
               { id: 'admin', name: 'Administrador' },
               { id: 'normal', name: 'Normal' },
             ]}
+            required
           />
         </FormGridContainer>
 
